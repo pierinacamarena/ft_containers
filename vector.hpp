@@ -6,23 +6,29 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/11/16 18:24:24 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/11/17 18:41:45 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include <iostream>
+
 namespace ft {
-	template < class T, class Alloc = allocator<T> >
+	template < class T, class Alloc = std::allocator<T> >
 	class vector
 	{
 		public:
 		/**
-		***************************
+		**************************************************
+		**************************************************
 		 * Member types definition
-		***************************
-		*/
+		**************************************************
+		**************************************************
+		**/
+
+		
 		private:
 		/**
 		 * 
@@ -47,15 +53,15 @@ namespace ft {
 
 		/*Constructs an empty container with n elements, each element is a copy
 		of val*/
-		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
+		//explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
 
 		/*Constructs a container with as many elements as the range [first, last],
 		with each element constructed from its corresponding element in that range,
 		in the same order*/
-		template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+		//template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 
 		/*Constructs a container with a copy of each of the elements in x, in the same order*/
-		vector (const vector& x);
+		//vector (const vector& x);
 		
 		/*Destructor*/
 		~vector();
@@ -77,15 +83,15 @@ namespace ft {
 		
 		/*BEGIN: Returns an iterator pointing to the first element in the vector
 		if the container is empty, the returned iterator value shall not be dereferenced*/
-		iterator begin();
+		//iterator begin();
 		
-		const_iterator begin() const;
+		//const_iterator begin() const;
 		
 		/*END: Returns an iterator referring to the past-the-end element in the 
 		vector container, if the container is empty returns the same as begin()*/
-		iterator end();
+		//iterator end();
 		
-		const_iterator end() const;
+		//const_iterator end() const;
 
 		/*RBEGIN: Returns a reverse iterator pointing to the last element in the
 		vector, reverse iterators iterate backwards, increasing them means moving
@@ -102,27 +108,6 @@ namespace ft {
 		reverse_iterator rend();
 		
 		const_reverse_iterator rend() const;
-
-		/*CBEGIN: Returns a const_iterators pointing to the first element in the
-		container, if the containor is empty, the returned iterator value shall not
-		be dereferenced.*/
-
-		const_iterator cbegin() const noexcept;
-
-		/*CEND: Returns a const_iterator pointing to the past-the-end element in the 
-		container. If the container is empty it returns the same as cbegin*/
-
-		const_iterator cend() const noexcept;
-
-		/*CRBEGIN: Returns a const_reverse_iterator pointing to the last element in
-		the container*/
-		
-		const_reverse_iterator crbegin() const noexcept;
-
-		/*CREND: Returns a const_reverse_iterator pointing to the theoretical element
-		preceding the first element in the container (which is considered its reverse end).*/
-
-		const_reverse_iterator crend() const noexcept;
 		
 		/*
 		******************************************
@@ -153,7 +138,8 @@ namespace ft {
 		-If n is also greater than the current container capacity, 
 		an automatic reallocation of the allocated storage space takes place.
 
-		*This function changes the actual content of the container by inserting or erasing elements from it.*/
+		*This function changes the actual content of the container 
+		by inserting or erasing elements from it.*/
 		void resize (size_type n, value_type val = value_type());
 
 		/*CAPACITY: Returns the size of the storage space currently allocated for the vector, 
@@ -179,13 +165,51 @@ namespace ft {
 		
 		void reserve (size_type n);
 
-		/*SHRINK_TO_FIT: Requests the container to reduce its capacity to fit its size.*/
-
 		/*
 		******************************************
 		 * Element access functions
 		******************************************
 		*/
+
+		/*If the vector object is const-qualified, the function returns a const_reference. 
+		Otherwise, it returns a reference.
+		
+		Member types reference and const_reference are the reference types 
+		to the elements of the container (see vector member types).*/
+		
+		/*OPERATOR[]: Returns a reference to the element at position n in the vector container.*/
+		
+		reference operator[] (size_type n);
+		
+		const_reference operator[] (size_type n) const;
+
+		/*AT: Returns a reference to the element at position n in the vector.
+		-The function automatically checks whether n is within the bounds of valid elements
+		in the vector, throwing an out_of_range exception if it is not 
+		(i.e., if n is greater than, or equal to, its size). 
+		This is in contrast with member operator[], that does not check against bounds.*/
+
+		reference at (size_type n);
+		
+		const_reference at (size_type n) const;
+
+		/*FRONT: Returns a reference to the first element in the vector.
+		-Unlike member vector::begin, which returns an iterator to this same element, 
+		this function returns a direct reference.
+		-Calling this function on an empty container causes undefined behavior*/
+
+		reference front();
+		
+		const_reference front() const;
+
+		/*BACK: Returns a reference to the last element in the vector.
+		-Unlike member vector::end, which returns an iterator just past this element, 
+		this function returns a direct reference.
+		-Calling this function on an empty container causes undefined behavior.*/
+		
+		reference back();
+		
+		const_reference back() const;
 
 		/*
 		******************************************
@@ -193,6 +217,78 @@ namespace ft {
 		******************************************
 		*/
 
+		/*ASSIGN: Assigns new contents to the vector, replacing its current contents,
+		and modifying its size accordingly.
+		
+		-In the range version, the new contents are elements constructed from each of the elements 
+		in the range between first and last, in the same order.
+		-In the fill version, the new contents are n elements, each initialized to a copy of val.
+		
+		*If a reallocation happens,the storage needed is allocated using the internal allocator.
+		
+		-Any elements held in the container before the call are destroyed and replaced by 
+		newly constructed elements (no assignments of elements take place).
+		-This causes an automatic reallocation of the allocated storage space 
+		if -and only if- the new vector size surpasses the current vector capacity.*/
+
+		//range version
+		template <class InputIterator>  void assign (InputIterator first, InputIterator last);
+
+		//fill version
+		void assign (size_type n, const value_type& val);
+
+		/*PUSH BACK: Adds a new element at the end of the vector, after its current last element.
+		The content of val is copied (or moved) to the new element.
+		This effectively increases the container size by one, which causes an automatic reallocation
+		of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.*/
+
+		void push_back (const value_type& val);
+		
+		/*POP_BACK: Removes the last element in the vector, effectively reducing the container size by one.
+		This destroys the removed element.*/
+
+		void pop_back();
+
+		/*INSERT: The vector is extended by inserting new elements before the element at the specified position,
+		effectively increasing the container size by the number of elements inserted.
+		
+		This causes an automatic reallocation of the allocated storage space if -and only if- the new vector size
+		surpasses the current vector capacity.
+
+		Inserting elements in positions other than the vector end causes the container to relocate all the elements
+		that were after position to their new positions. 
+		*/
+
+		//single element
+		iterator insert (iterator position, const value_type& val);
+
+		//fill
+		void insert (iterator position, size_type n, const value_type& val);
+
+		//range
+		template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
+
+		/*ERASE: Removes from the vector either a single element (position) or a range of elements ([first,last)).
+		This effectively reduces the container size by the number of elements removed, which are destroyed.
+		erasing elements in positions other than the vector end causes the container to relocate all the 
+		elements after the segment erased to their new positions. */
+
+		iterator erase (iterator position);
+		
+		iterator erase (iterator first, iterator last);
+
+		/*SWAP: Exchanges the content of the container by the content of x, which is another vector object 
+		of the same type. Sizes may differ.
+		All iterators, references and pointers remain valid for the swapped objects.*/
+
+		void swap (vector& x);
+		
+		/*CLEAR: Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+		A reallocation is not guaranteed to happen, and the vector capacity 
+		is not guaranteed to change due to calling this function.*/
+
+		void clear();
+		
 		/*
 		******************************************
 		 * Allocator
