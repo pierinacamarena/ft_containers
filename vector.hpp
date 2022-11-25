@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/11/17 18:41:45 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/11/25 15:20:45 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace ft {
 		/**
 		**************************************************
 		**************************************************
-		 * Member types definition
+		 * Vector: Member types definition
 		**************************************************
 		**************************************************
 		**/
@@ -61,12 +61,12 @@ namespace ft {
 
 		private:
 		/**
-		 * Attributes
+		 * Attributes, data
 		*/
-
-			size_type size;
-			size_type capacity;
-			allocator_type	alloc
+			allocator_type	_alloc;
+			pointer			_start;
+			pointer			_end;
+			pointer			_end_capacity;
 
 
 		public:
@@ -85,7 +85,12 @@ namespace ft {
 		*/
 
 		/*Constructs an empty container with no elements*/
-		explicit vector (const allocator_type& alloc = allocator_type());
+		explicit vector (const allocator_type& alloc = allocator_type()) :
+			_alloc(alloc),
+			_start(nullptr),
+			_end(nullptr),
+			_end_capacity(nullptr)
+			{}
 
 		/*Constructs an empty container with n elements, each element is a copy
 		of val*/
@@ -349,3 +354,6 @@ namespace ft {
 }
 
 #endif
+
+
+//rooteleven
