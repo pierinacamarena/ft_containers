@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterator_traits.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 22:12:38 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/13 13:29:49 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/19 14:28:45 by pierina          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 namespace ft {
 
+	struct biderectional_iterator_tag{};
+	struct random_access_iterator_tag{};
+	
 	template<class Iterator>
 	struct iterator_traits {
 		typedef typename Iterator::difference_type		difference_type;
@@ -44,6 +47,6 @@ namespace ft {
 		typedef	T&										reference;
 		typedef	std::random_access_iterator_tag			iterator_category;
 	};
-} 
+};
 
 #endif
