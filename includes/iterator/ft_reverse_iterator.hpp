@@ -6,7 +6,7 @@
 /*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 21:52:19 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/19 17:27:01 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/20 16:13:02 by pierina          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,6 +267,6 @@ namespace ft {
 	{
 		return (reverse_iterator<Iterator>(it.base() - n));
 	}
-};
+}
 
 #endif

@@ -6,13 +6,16 @@
 /*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 22:12:38 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/19 14:28:45 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/20 14:30:49 by pierina          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #ifndef _FT_ITERATOR_TRAITS_HPP
 #define _FT_ITERATOR_TRAITS_HPP
+
+# include <cstddef>
+# include <iterator>
 
 #include "ft_iterator.hpp"
 
