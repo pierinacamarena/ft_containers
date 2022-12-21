@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 16:10:56 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/22 00:06:42 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/22 00:23:07 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,11 +142,12 @@ namespace ft
 		**************************************************
 		**/
 
+		//a+n
 		random_access_iterator operator+(difference_type n) const
 		{
 			return (_ptr + n);
 		}
-
+		//a-n
 		random_access_iterator operator-(difference_type n) const
 		{
 			return (_ptr - n);
@@ -175,9 +176,17 @@ namespace ft
 		**************************************************
 		**/
 
-		
-		==
-		!=
+		template<typename Iter1, typename Iter2>
+		bool operator==(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (lhs.base() == rhs.base());
+		}
+
+		template<typename Iter1, typename Iter2>
+		bool operator==(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (lhs.base() != rhs.base());
+		}
 		/**
 		**************************************************
 		 * random_access_iterator: comparison with inequality
@@ -185,10 +194,29 @@ namespace ft
 		**************************************************
 		**/
 
-		a < b
-		a > b
-		a <= b
-		a >= b
+		template<typename Iter1, typename Iter2>
+		bool operator<(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (lhs.base() < rhs.base());
+		}
+
+		template<typename Iter1, typename Iter2>
+		bool operator>(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (lhs.base() > rhs.base());
+		}
+
+		template<typename Iter1, typename Iter2>
+		bool operator<=(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (lhs.base() <= rhs.base());
+		}
+
+		template<typename Iter1, typename Iter2>
+		bool operator>=(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (lhs.base() >= rhs.base());
+		}
 
 		a - b
 }
