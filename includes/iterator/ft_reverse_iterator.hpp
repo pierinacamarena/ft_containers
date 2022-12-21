@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_reverse_iterator.hpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 21:52:19 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/20 16:13:02 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/21 23:41:39 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "ft_iterator.hpp"
 #include "ft_iterator_traits.hpp"
+#include "ft_random_access_iterator.hpp"
 
 namespace ft {
 
@@ -66,7 +67,7 @@ namespace ft {
 
 		/**
 		**************************************************
-		 * reverse_iterator: assignment operator
+		 * reverse_iterator: copy assignment operator
 		**************************************************
 		*/
 
@@ -77,6 +78,22 @@ namespace ft {
 				_current = (other.base());
 			return (*this);
 		}
+
+		/**
+		**************************************************
+		 * reverse_iterator: conversion to another type
+		 * in this case instantiating the template with const
+		 * it is different from the compiler standpoint
+		**************************************************
+		*/
+
+		template<typename T>
+		reverse_iterator<ft::random_access_iterator<const T>>()const
+		{
+			return (reverse_iterator<ft::random_access_iterator<const T>>(_current));
+		}
+
+		//need to do one for the rbt iterator
 		/**
 		**************************************************
 		 * reverse_iterator: access the underlying iterator
@@ -108,24 +125,24 @@ namespace ft {
 		**************************************************
 		*/
 		
-		//pre increment, original iterator is decremented
+		//pre increment, original iterator is decremented (++a)
 		reverse_iterator& operator++(){
 			--_current;
 			return (*this);
 		}
-		//post increment
+		//post increment (a++)
 		reverse_iterator operator++(int){
 			reverse_iterator tmp = *this;
 			--_current;
 			return(tmp);
 		}
-		//pre decrement, original iterator is incremented
+		//pre decrement, original iterator is incremented (--a)
 		reverse_iterator& operator--()
 		{
 			++_current;
 			return (*this);
 		}
-		//post decrement
+		//post decrement (a--)
 		reverse_iterator operator--(int)
 		{
 			reverse_iterator tmp = *this;
