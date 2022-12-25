@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 16:10:56 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/22 00:23:07 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/25 18:42:11 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,10 +194,25 @@ namespace ft
 		**************************************************
 		**/
 
+		//a<b
+		template<typename T>
+		bool operator<(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+		{
+			return (lhs.base() < rhs.base());
+		}
+		
 		template<typename Iter1, typename Iter2>
 		bool operator<(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
 		{
 			return (lhs.base() < rhs.base());
+		}
+
+		//a>b
+
+		template<typename T>
+		bool operator>(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+		{
+			return (lhs.base() > rhs.base());
 		}
 
 		template<typename Iter1, typename Iter2>
@@ -206,19 +221,57 @@ namespace ft
 			return (lhs.base() > rhs.base());
 		}
 
+		//a<=b
+
+		template<typename T>
+		bool operator<=(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+		{
+			return (lhs.base() <= rhs.base());
+		}
+
 		template<typename Iter1, typename Iter2>
 		bool operator<=(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
 		{
 			return (lhs.base() <= rhs.base());
 		}
 
+		//a>=b
+		
+		template<typename T>
+		bool operator>=(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+		{
+			return (lhs.base() >= rhs.base());
+		}
+		
 		template<typename Iter1, typename Iter2>
 		bool operator>=(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
 		{
 			return (lhs.base() >= rhs.base());
 		}
 
-		a - b
+		//a-b
+		template <typename T>
+		typename random_access_iterator<T>::difference_type 
+		operator-(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+		{
+			return (lhs.base() - rhs.base());
+		}
+
+		template< typename Iter1, typename Iter2 >
+		typename random_access_iterator<Iter1>::difference_type
+    	operator-( const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs )
+		{
+			return (lhs.base() - rhs.base());
+		}
+
+		//a+n
+		template <typename Iterator>
+		random_access_iterator<Iterator> operator+(typename random_access_iterator<Iterator>::difference_type n,
+		const random_access_iterator<Iterator>& it)
+		{
+			return (random_access_iterator<Iterator>(it.base() + n));
+		}
+		
 }
 
 #endif
