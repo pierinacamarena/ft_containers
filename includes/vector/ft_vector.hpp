@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/25 19:09:08 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/25 19:42:42 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,10 +216,23 @@ namespace ft {
 		by inserting or erasing elements from it.*/
 		void resize (size_type n, value_type val = value_type())
 		{
-			if (n > size())
-				insert(end(), n-size(), val);
-			else if (n < size())
-				erase(begin() + n, end());
+			if (n < size())
+			{
+				
+			}
+			else if (n > size())
+			{
+				size_t cap= capacity();
+				if (n <= cap)
+					;
+				else if (n > cap)
+				{
+					if (n > cap * 2)
+						reserve(n);
+					else
+						reserve(cap *2);
+				}
+			}
 			else
 				;
 		}
@@ -301,9 +314,19 @@ namespace ft {
 		(i.e., if n is greater than, or equal to, its size).
 		This is in contrast with member operator[], that does not check against bounds.*/
 
-		reference at (size_type n);
+		reference at (size_type n)
+		{
+			if (n >= size())
+				throw(std::out_of_range("vector"));
+			return (_start[n]);
+		}
 
-		const_reference at (size_type n) const;
+		const_reference at (size_type n) const
+		{
+			if (n >= size())
+				throw(std::out_of_range("vector"));
+			return (_start[n]);
+		}
 
 		/*FRONT: Returns a reference to the first element in the vector.
 		-Unlike member vector::begin, which returns an iterator to this same element,
@@ -356,7 +379,10 @@ namespace ft {
 		if -and only if- the new vector size surpasses the current vector capacity.*/
 
 		//range version
-		template <class InputIterator>  void assign (InputIterator first, InputIterator last);
+		template <class InputIterator>  void assign (InputIterator first, InputIterator last)
+		{
+			
+		}
 
 		//fill version
 		void assign (size_type n, const value_type& val);
@@ -473,22 +499,40 @@ namespace ft {
 	**/
 
 	template <class T, class Alloc>
-	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (lhs.size() == rhs.size && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
 
 	template <class T, class Alloc>
-	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!operator==(lhs, rhs));
+	}
+	
+	template <class T, class Alloc>
+	bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
 
 	template <class T, class Alloc>
-	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (rhs < lhs);
+	}
 
 	template <class T, class Alloc>
-	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		
+	}
 
 	template <class T, class Alloc>
-	bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-	template <class T, class Alloc>
-	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		
+	}
 
 	/**
 	 * Swap
