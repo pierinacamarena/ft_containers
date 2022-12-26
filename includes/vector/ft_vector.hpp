@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/26 16:02:48 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/26 16:47:56 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,17 +100,21 @@ namespace ft {
 		with each element constructed from its corresponding element in that range,
 		in the same order*/
 		
-		template <class InputIterator> 
-			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+		// template <class InputIterator> 
+		// 	vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 
 		/*Constructs a container with a copy of each of the elements in x, in the same order*/
-		vector (const vector& x);
+		// vector (const vector& x);
 
 		/*Destructor*/
-		~vector();
+		~vector()
+		{
+			clear();
+			_alloc.deallocate(_start, capacity());
+		}
 
 		/*Copy operator: Copies all the elements from x into the container*/
-		vector& operator= (const vector& x);
+		// vector& operator= (const vector& x);
 
 		/*
 		******************************************
@@ -386,7 +390,7 @@ namespace ft {
 		if -and only if- the new vector size surpasses the current vector capacity.*/
 
 		//range version
-		template <class InputIterator>  void assign (InputIterator first, InputIterator last);
+		// template <class InputIterator>  void assign (InputIterator first, InputIterator last);
 
 		//fill version
 		void assign (size_type n, const value_type& val)
@@ -446,10 +450,10 @@ namespace ft {
 		*/
 
 		//single element
-		iterator insert (iterator position, const value_type& val);
+		// iterator insert (iterator position, const value_type& val);
 
 		//fill
-		void insert (iterator position, size_type n, const value_type& val);
+		// void insert (iterator position, size_type n, const value_type& val);
 
 		//range
 		template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
@@ -459,15 +463,15 @@ namespace ft {
 		erasing elements in positions other than the vector end causes the container to relocate all the
 		elements after the segment erased to their new positions. */
 
-		iterator erase (iterator position);
+		// iterator erase (iterator position);
 
-		iterator erase (iterator first, iterator last);
+		// iterator erase (iterator first, iterator last);
 
 		/*SWAP: Exchanges the content of the container by the content of x, which is another vector object
 		of the same type. Sizes may differ.
 		All iterators, references and pointers remain valid for the swapped objects.*/
 
-		void swap (vector& x);
+		// void swap (vector& x);
 
 		/*CLEAR: Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		A reallocation is not guaranteed to happen, and the vector capacity
@@ -570,8 +574,8 @@ namespace ft {
 	 * Swap
 	**/
 
-	template <class T, class Alloc>
-	void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
+	// template <class T, class Alloc>
+	// void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
 
 }
 
