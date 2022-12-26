@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 16:10:56 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/25 18:42:11 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/26 19:03:54 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ namespace ft
 	template<typename T>
     class random_access_iterator
     {
-    protected:
-		//atributtes 
-		pointer _ptr;
 
 	/*********Random_access_iterator typedefs*********/
 
@@ -168,6 +165,10 @@ namespace ft
 		{
 			return (_ptr -= n);
 		}
+
+		protected:
+			//atributtes 
+			pointer _ptr;
 	};
 	
 		/**
@@ -176,8 +177,8 @@ namespace ft
 		**************************************************
 		**/
 
-		template<typename Iter1, typename Iter2>
-		bool operator==(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		template<typename T>
+		bool operator==(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 		{
 			return (lhs.base() == rhs.base());
 		}
