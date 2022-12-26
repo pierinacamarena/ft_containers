@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/26 14:03:47 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/26 15:17:51 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,14 @@ namespace ft {
 
 		/*Constructs a container with n elements, each element is a copy
 		of val*/
-		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
+		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+		{
+			_start = _alloc.allocate(n);
+			_end = _start + n;
+			_end_capacity = _end;
+			while (n > 0)
+				_alloc.construct(_start + --n, val);
+		}
 
 		/*Constructs a container with as many elements as the range [first, last],
 		with each element constructed from its corresponding element in that range,
