@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/26 15:17:51 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/26 16:02:48 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,13 +386,27 @@ namespace ft {
 		if -and only if- the new vector size surpasses the current vector capacity.*/
 
 		//range version
-		template <class InputIterator>  void assign (InputIterator first, InputIterator last)
-		{
-			
-		}
+		template <class InputIterator>  void assign (InputIterator first, InputIterator last);
 
 		//fill version
-		void assign (size_type n, const value_type& val);
+		void assign (size_type n, const value_type& val)
+		{
+			size_t _capacity = capacity();
+			_destroy(_start, _end);
+			if (n > _capacity)
+			{
+				_alloc.deallocate(_start, _capacity);
+				_start = _alloc.allocate(n);
+				_end = _start;
+				_end_capacity = _start + n;
+				while (n)
+				{
+					_alloc.construct(_end, val);
+					_end++;
+					n--;
+				}
+			}
+		}
 
 		/*PUSH BACK: Adds a new element at the end of the vector, after its current last element.
 		The content of val is copied (or moved) to the new element.
@@ -473,6 +487,15 @@ namespace ft {
 		 * private_functions
 		******************************************
 		*/
+
+		void	_alloc_fill_n(pointer start, size_t n, const value_type& val)
+		{
+			for(int i = 0; i < n, i++)
+			{
+				_alloc.construct(_start, val);
+				start++;
+			}
+		}
 		template <typename InputIterator>
 		pointer _alloc_copy(InputIterator start, InputIterator end, InputIterator newStart)
 		{
@@ -485,6 +508,7 @@ namespace ft {
 			return (newStart.base());
 		};
 
+		
 		void	_destroy(pointer start, pointer end)
 		{
 			while (start != end)
