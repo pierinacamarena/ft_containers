@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_equal.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 09:37:20 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/19 09:38:20 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/26 17:50:42 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace ft {
 	**************************************************************************/
 
 	template <class InputIterator1, class InputIterator2>
-	bool equal(InputIterator1 first, InputIterator1 last1,
+	bool equal(InputIterator1 first1, InputIterator1 last1,
 		InputIterator2 first2)
 	{
 		while (first1 != last1)
@@ -37,7 +37,7 @@ namespace ft {
 	}
 	
 	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-	bool equal(InputIterator1 first, InputIterator1 last1,
+	bool equal(InputIterator1 first1, InputIterator1 last1,
 		InputIterator2 first2, BinaryPredicate pred)
 	{
 		while (first1 != last1)
