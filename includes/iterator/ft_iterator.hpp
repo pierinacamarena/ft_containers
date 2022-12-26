@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterator.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 21:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/20 14:11:53 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/26 18:15:18 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef _ITERATOR_HPP_
-#define _ITERATOR_HPP
+#define _ITERATOR_HPP_
 
 #include <cstddef>
 
