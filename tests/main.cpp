@@ -1,116 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/26 17:40:18 by pcamaren          #+#    #+#             */
+/*   Updated: 2022/12/26 18:25:34 by pcamaren         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/vector/ft_vector.hpp"
+// #include "map.hpp"
 #include <iostream>
-#include <string>
-#include <deque>
-#if 1 // CREATE A REAL STL EXAMPLE
-#include <map>
-#include <stack>
 #include <vector>
-namespace ft = std;
-#else
-#include <map.hpp>
-#include <stack.hpp>
-#include <vector.hpp>
-#endif
 
-#include <stdlib.h>
 
-#define MAX_RAM 4294967296
-#define BUFFER_SIZE 4096
-struct Buffer
+#include <sstream>
+#include <iomanip>
+
+#define COLOR_ONE	"\033[35m"
+#define COLOR_TWO	"\033[33m"
+#define COLOR_NO	"\033[0m"
+
+template < typename T >
+void	printf_v(T & v, std::string name)
 {
-	int idx;
-	char buff[BUFFER_SIZE];
-};
+	std::cout << name << " = {";
+	for (unsigned int i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i];
+		if (i + 1 != v.size())
+			std::cout << ", ";
+	}
+	std::cout << "}; \n";
+}
 
-#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+// template <class Key, class T>
+// void	print_m(ft::map<Key, T>& lst)
+// {
+// 	for (typename ft::map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
+// 		std::cout << it->first << " => " << it->second << '\n';
+// }
 
-template <typename T>
-class MutantStack : public ft::stack<T>
+
+int main()
 {
-public:
-	MutantStack() {}
-	MutantStack(const MutantStack<T> &src) { *this = src; }
-	MutantStack<T> &operator=(const MutantStack<T> &rhs)
-	{
-		this->c = rhs.c;
-		return *this;
-	}
-	~MutantStack() {}
+		// Create a vector containing integers
+		std::cout << COLOR_TWO << "/--test MAX_SIZE size capacity--/" << COLOR_NO << std::endl;
+		ft::vector<int>		m(10, 42);
+		std::vector<int>	v(10, 42);
 
-	typedef typename ft::stack<T>::container_type::iterator iterator;
+		std::cout << "MAX_SIZE: " << v.max_size() << "\n";
+		std::cout << "max_size: " << m.max_size() << "\n";
+		std::cout << "SIZE: " << v.size() << "\n";
+		std::cout << "size: " << m.size() << "\n";
+		std::cout << "CAPACITY: " << v.capacity() << "\n";
+		std::cout << "capacity: " << m.capacity() << "\n";
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-};
+		// // Add two more integers to vector
+		// v.push_back(7);
+		// v.push_back(5);
+		// v.push_back(16);
+		// v.push_back(8);
+		// v.push_back(13);
 
-int main(int argc, char **argv)
-{
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./test seed" << std::endl;
-		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
-		return 1;
-	}
-	const int seed = atoi(argv[1]);
-	srand(seed);
-
-	ft::vector<std::string> vector_str;
-	ft::vector<int> vector_int;
-	ft::stack<int> stack_int;
-	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer>> stack_deq_buffer;
-	ft::map<int, int> map_int;
-
-	for (int i = 0; i < COUNT; i++)
-	{
-		vector_buffer.push_back(Buffer());
-	}
-
-	for (int i = 0; i < COUNT; i++)
-	{
-		const int idx = rand() % COUNT;
-		vector_buffer[idx].idx = 5;
-	}
-	ft::vector<Buffer>().swap(vector_buffer);
-
-	try
-	{
-		for (int i = 0; i < COUNT; i++)
-		{
-			const int idx = rand() % COUNT;
-			vector_buffer.at(idx);
-			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" << std::endl;
-		}
-	}
-	catch (const std::exception &e)
-	{
-		// NORMAL ! :P
-	}
-
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
-	}
-
-	int sum = 0;
-	for (int i = 0; i < 10000; i++)
-	{
-		int access = rand();
-		sum += map_int[access];
-	}
-	std::cout << "should be constant with the same seed: " << sum << std::endl;
-
-	{
-		ft::map<int, int> copy = map_int;
-	}
-	MutantStack<char> iterable_stack;
-	for (char letter = 'a'; letter <= 'z'; letter++)
-		iterable_stack.push(letter);
-	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
-	{
-		std::cout << *it;
-	}
-	std::cout << std::endl;
-	return (0);
+		// // Add two more integers to vector
+		// m.push_back(7);
+		// m.push_back(5);
+		// m.push_back(16);
+		// m.push_back(8);
+		// m.push_back(13);
+		// // Print out the vector
+	
+		// printf_v(v, "v");
+		// printf_v(m, "m");
+		// std::cout << "MAX_SIZE: " << v.max_size() << "\n";
+		// std::cout << "max_size: " << m.max_size() << "\n";
+		// std::cout << "SIZE: " << v.size() << "\n";
+		// std::cout << "size: " << m.size() << "\n";
+		// std::cout << "CAPACITY: " << v.capacity() << "\n";
+		// std::cout << "capacity: " << m.capacity() << "\n";
 }
