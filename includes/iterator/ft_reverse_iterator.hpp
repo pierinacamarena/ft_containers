@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 21:52:19 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/21 23:41:39 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:59:59 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,11 @@ namespace ft {
 		**************************************************
 		*/
 
-		template<typename T>
-		reverse_iterator<ft::random_access_iterator<const T>>()const
-		{
-			return (reverse_iterator<ft::random_access_iterator<const T>>(_current));
-		}
+		// template<typename T>
+		// reverse_iterator<ft::random_access_iterator<const T> >() const
+		// {
+		// 	return (reverse_iterator<ft::random_access_iterator<const T> >(_current));
+		// }
 
 		//need to do one for the rbt iterator
 		/**
