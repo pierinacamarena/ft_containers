@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/27 18:44:59 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/27 19:19:38 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,15 +304,20 @@ namespace ft {
 				throw(std::length_error("vector::reserve"));
 			else if (n > capacity())
 			{
-				size_t len = size();
-				pointer	tmp;
-				size_t	old_size = size();
-				tmp = _alloc_copy(len, begin(), end());
-				_destroy(_start, _end);
-				_alloc.deallocate(_start, capacity());
-				_start = tmp;
-				_end = _start + old_size;
+				pointer old_start = _start;
+				pointer old_end = _end;
+				size_type old_size = size();
+				size_type old_capacity = capacity();
+					
+				_start = _alloc.allocate(n);
 				_end_capacity = _start + n;
+				_end = _start;
+				for (; old_start != old_end; old_start++)
+				{
+					_alloc.construct(_end, *old_start);
+					_end++;
+				}
+				_alloc.deallocate(old_start - old_size, old_capacity);
 			}
 		}
 
@@ -440,27 +445,21 @@ namespace ft {
 		This effectively increases the container size by one, which causes an automatic reallocation
 		of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.*/
 
-		// void push_back (const value_type& val)
-		// {
-		// 	if (_end == _end_capacity)
-		// 	{
-		// 		if (size() > 0)
-		// 			reserve(size() * 1);
-		// 		else
-		// 			reserve(1);
-		// 	}
-		// 	_alloc.construct(_end,val);
-		// 	_end++;
-		// }
+		void push_back (const value_type& val)
+		{
+			if (_end == _end_capacity)
+				_grow();
+			_alloc.construct(_end, val);
+			_end++;
+		}
 
 		/*POP_BACK: Removes the last element in the vector, effectively reducing the container size by one.
 		This destroys the removed element.*/
 
-		// void pop_back()
-		// {
-		// 	_alloc.destroy(back());
-		// 	_end--;
-		// }
+		void pop_back()
+		{
+			_alloc.destroy(--_end);
+		}
 
 		/*INSERT: The vector is extended by inserting new elements before the element at the specified position,
 		effectively increasing the container size by the number of elements inserted.
@@ -557,6 +556,16 @@ namespace ft {
 				_alloc.destroy(start);
 				start++;
 			}
+		}
+
+		void _grow(size_t to_add = 0)
+		{
+			if (capacity() == 0 && (to_add <= 1))
+				reserve(1);
+			else if (to_add > capacity())
+				reserve(capacity() + to_add);
+			else
+				reserve(capacity() * 2);
 		}
 		
 	};
