@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/27 18:39:02 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:44:59 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,22 +298,23 @@ namespace ft {
 		and the vector capacity is not affected.
 		*This function has no effect on the vector size and cannot alter its elements.*/
 
-		// void reserve (size_type n)
-		// {
-		// 	if (n > max_size())
-		// 		throw(std::length_error("vector::reserve"));
-		// 	else if (n > capacity())
-		// 	{
-		// 		pointer	tmp;
-		// 		size_t	old_size = size();
-		// 		tmp = _alloc_copy(begin(), end(), tmp);
-		// 		_destroy(_start, _end);
-		// 		_alloc.deallocate(_start, _end_capacity);
-		// 		_start = tmp;
-		// 		_end = start + old_size;
-		// 		_end_capacity = start + n;
-		// 	}
-		// }
+		void reserve (size_type n)
+		{
+			if (n > max_size())
+				throw(std::length_error("vector::reserve"));
+			else if (n > capacity())
+			{
+				size_t len = size();
+				pointer	tmp;
+				size_t	old_size = size();
+				tmp = _alloc_copy(len, begin(), end());
+				_destroy(_start, _end);
+				_alloc.deallocate(_start, capacity());
+				_start = tmp;
+				_end = _start + old_size;
+				_end_capacity = _start + n;
+			}
+		}
 
 		/*
 		******************************************
