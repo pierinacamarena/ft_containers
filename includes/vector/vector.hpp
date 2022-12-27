@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/26 18:55:53 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:39:02 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,13 @@
 #include "../iterator/ft_iterator_traits.hpp"
 #include "../iterator/ft_random_access_iterator.hpp"
 #include "../iterator/ft_reverse_iterator.hpp"
+#include "../utils/nullptr.hpp"
 
 #include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <algorithm>
+#include <cassert>
 // #include "ft_utils_vector.hpp"
 
 namespace ft {
@@ -81,20 +86,20 @@ namespace ft {
 		*/
 
 		/*Constructs an empty container with no elements*/
-		// explicit vector (const allocator_type& alloc = allocator_type()) :
-		// 	_alloc(alloc),
-		// 	_start(nullptr),
-		// 	_end(nullptr),
-		// 	_end_capacity(nullptr)
-		// 	{}
+		explicit vector (const allocator_type& alloc = allocator_type()) :
+			_alloc(alloc),
+			_start(nullptr_t),
+			_end(nullptr_t),
+			_end_capacity(nullptr_t)
+			{}
 
 		/*Constructs a container with n elements, each element is a copy
 		of val*/
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 		:	_alloc(alloc),
-			_start(0),
-			_end(0),
-			_end_capacity(0)
+			_start(nullptr_t),
+			_end(nullptr_t),
+			_end_capacity(nullptr_t)
 		{
 			_start = _alloc.allocate(n);
 			_end = _start + n;
@@ -111,7 +116,16 @@ namespace ft {
 		// 	vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 
 		/*Constructs a container with a copy of each of the elements in x, in the same order*/
-		// vector (const vector& x);
+		vector (const vector& x)
+		{
+			if (this == &x )
+				return;
+			const size_type otherLen = x.size();
+			_start = _alloc_copy(otherLen, x.begin(), x.end());
+			_end = _start + otherLen;
+			_end_capacity = _end;
+			_alloc = x._alloc;
+		}
 
 		/*Destructor*/
 		~vector()
@@ -292,8 +306,7 @@ namespace ft {
 		// 	{
 		// 		pointer	tmp;
 		// 		size_t	old_size = size();
-		// 		tmp = _alloc.allocate(n);
-		// 		_alloc_copy(begin(), end(), tmp);
+		// 		tmp = _alloc_copy(begin(), end(), tmp);
 		// 		_destroy(_start, _end);
 		// 		_alloc.deallocate(_start, _end_capacity);
 		// 		_start = tmp;
@@ -316,15 +329,15 @@ namespace ft {
 
 		/*OPERATOR[]: Returns a reference to the element at position n in the vector container.*/
 
-		// reference operator[] (size_type n)
-		// {
-		// 	return (*(_start + n));
-		// }
+		reference operator[] (size_type n)
+		{
+			return (*(_start + n));
+		}
 
-		// const_reference operator[] (size_type n) const
-		// {
-		// 	return (*(_start + n));
-		// }
+		const_reference operator[] (size_type n) const
+		{
+			return (*(_start + n));
+		}
 
 		/*AT: Returns a reference to the element at position n in the vector.
 		-The function automatically checks whether n is within the bounds of valid elements
@@ -332,49 +345,51 @@ namespace ft {
 		(i.e., if n is greater than, or equal to, its size).
 		This is in contrast with member operator[], that does not check against bounds.*/
 
-		// reference at (size_type n)
-		// {
-		// 	if (n >= size())
-		// 		throw(std::out_of_range("vector"));
-		// 	return (_start[n]);
-		// }
+		reference at (size_type n)
+		{
+			if (n >= size())
+				throw(std::out_of_range("vector"));
+			return ((*this)[n]);
+			// return (_start[n]);
+		}
 
-		// const_reference at (size_type n) const
-		// {
-		// 	if (n >= size())
-		// 		throw(std::out_of_range("vector"));
-		// 	return (_start[n]);
-		// }
+		const_reference at (size_type n) const
+		{
+			if (n >= size())
+				throw(std::out_of_range("vector"));
+			return ((*this)[n]);
+			// return (_start[n]);
+		}
 
 		/*FRONT: Returns a reference to the first element in the vector.
 		-Unlike member vector::begin, which returns an iterator to this same element,
 		this function returns a direct reference.
 		-Calling this function on an empty container causes undefined behavior*/
 
-		// reference front()
-		// {
-		// 	return (*_start);
-		// }
+		reference front()
+		{
+			return (*_start);
+		}
 
-		// const_reference front() const
-		// {
-		// 	return (*_start);
-		// }
+		const_reference front() const
+		{
+			return (*_start);
+		}
 
 		/*BACK: Returns a reference to the last element in the vector.
 		-Unlike member vector::end, which returns an iterator just past this element,
 		this function returns a direct reference.
 		-Calling this function on an empty container causes undefined behavior.*/
 
-		// reference back()
-		// {
-		// 	return (*(_end - 1));
-		// }
+		reference back()
+		{
+			return (*(_end - 1));
+		}
 
-		// const_reference back() const
-		// {
-		// 	return (*(_end - 1));
-		// }
+		const_reference back() const
+		{
+			return (*(_end - 1));
+		}
 
 		/*
 		******************************************
@@ -400,24 +415,24 @@ namespace ft {
 		// template <class InputIterator>  void assign (InputIterator first, InputIterator last);
 
 		//fill version
-		void assign (size_type n, const value_type& val)
-		{
-			size_t _capacity = capacity();
-			_destroy(_start, _end);
-			if (n > _capacity)
-			{
-				_alloc.deallocate(_start, _capacity);
-				_start = _alloc.allocate(n);
-				_end = _start;
-				_end_capacity = _start + n;
-				while (n)
-				{
-					_alloc.construct(_end, val);
-					_end++;
-					n--;
-				}
-			}
-		}
+		// void assign (size_type n, const value_type& val)
+		// {
+		// 	size_t _capacity = capacity();
+		// 	_destroy(_start, _end);
+		// 	if (n > _capacity)
+		// 	{
+		// 		_alloc.deallocate(_start, _capacity);
+		// 		_start = _alloc.allocate(n);
+		// 		_end = _start;
+		// 		_end_capacity = _start + n;
+		// 		while (n)
+		// 		{
+		// 			_alloc.construct(_end, val);
+		// 			_end++;
+		// 			n--;
+		// 		}
+		// 	}
+		// }
 
 		/*PUSH BACK: Adds a new element at the end of the vector, after its current last element.
 		The content of val is copied (or moved) to the new element.
@@ -506,6 +521,19 @@ namespace ft {
 				_alloc.construct(_start, val);
 				start++;
 			}
+		}
+
+		pointer _allocate(size_type n)
+		{
+			return n == 0 ? pointer() : _alloc.allocate(n);
+		}
+
+		template<typename InputIterator>
+		pointer _alloc_copy(size_type n, InputIterator first, InputIterator last)
+		{
+			pointer result = _allocate(n);
+			std::uninitialized_copy(first, last, result);
+			return result;
 		}
 		
 		// template <typename InputIterator>
