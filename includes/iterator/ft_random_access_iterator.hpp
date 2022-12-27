@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 16:10:56 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/26 19:03:54 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/27 15:47:52 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,37 @@
 
 #include "ft_iterator.hpp"
 #include "ft_iterator_traits.hpp"
+#include "../utils/nullptr.hpp"
+#include <iostream>
 
 namespace ft
 {
 	template<typename T>
-    class random_access_iterator
+    class random_access_iterator : ft::iterator<random_access_iterator_tag, T>
     {
 
 	/*********Random_access_iterator typedefs*********/
 
     public:
-				
-		typedef T value_type;
-		typedef std::random_access_iterator_tag iterator_category;
-		typedef std::ptrdiff_t difference_type;
-		typedef value_type* pointer;
-		typedef value_type& reference;
+
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category	iterator_category;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
+		typedef	T*																			pointer;
+		typedef T&																			reference;
 
 		//constructors
 
-		random_access_iterator() : _ptr(NULL){}
-		random_access_iterator(T *ptr) : _ptr(ptr) {}
+		random_access_iterator(void) : _ptr(nullptr_t){}
+		random_access_iterator(pointer ptr) : _ptr(ptr) {}
 		random_access_iterator(const random_access_iterator &it) : _ptr(it._ptr) {}
 
 		//destructor
 		
-		~random_access_iterator() {}
+		virtual ~random_access_iterator() {}
 		
 		//conversion to another type, when it is instantiated with const
-		operator random_access_iterator<T const>() const
+		operator random_access_iterator<const T>() const
 		{
 			return (random_access_iterator<const T>(_ptr));
 		}
@@ -51,14 +53,14 @@ namespace ft
 		//assignment operator
 		random_access_iterator &operator=(const random_access_iterator &it)
 		{
-			if (*this != &it)
+			if (*this != it)
 				_ptr = it._ptr;
 			return (*this);
 		}
 
 		//access to the pointer to the iterator
 
-		random_access_iterator base() const
+		pointer base() const
 		{
 			return (_ptr);
 		}
@@ -186,7 +188,19 @@ namespace ft
 		template<typename Iter1, typename Iter2>
 		bool operator==(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
 		{
+			return (lhs.base() == rhs.base());
+		}
+
+		template<typename T>
+		bool operator!=(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+		{
 			return (lhs.base() != rhs.base());
+		}
+
+		template<typename Iter1, typename Iter2>
+		bool operator!=(const random_access_iterator<Iter1>& lhs, const random_access_iterator<Iter2>& rhs)
+		{
+			return (!(lhs.base() == rhs.base()));
 		}
 		/**
 		**************************************************
