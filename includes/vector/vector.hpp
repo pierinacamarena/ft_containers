@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/28 15:47:37 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/28 16:54:14 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,28 +247,34 @@ namespace ft {
 
 		*This function changes the actual content of the container
 		by inserting or erasing elements from it.*/
-		// void resize (size_type n, value_type val = value_type())
-		// {
-		// 	if (n < size())
-		// 	{
-				
-		// 	}
-		// 	else if (n > size())
-		// 	{
-		// 		size_t cap= capacity();
-		// 		if (n <= cap)
-		// 			;
-		// 		else if (n > cap)
-		// 		{
-		// 			if (n > cap * 2)
-		// 				reserve(n);
-		// 			else
-		// 				reserve(cap *2);
-		// 		}
-		// 	}
-		// 	else
-		// 		;
-		// }
+		void resize (size_type n, value_type val = value_type())
+		{
+			size_t tmp_size = size();
+			if (n == tmp_size)
+				return ;
+			if (n < tmp_size)
+			{
+				_destroy(_start + n, _end);
+				_end = _start + n;
+			}
+			else
+			{
+				size_t	tmp_cap = capacity();
+				if (n > tmp_cap)
+				{
+					if (n > (tmp_cap * 2))
+						reserve(n);
+					else
+						reserve(tmp_cap * 2);
+				}
+				for (size_t i = 0; i < (n - tmp_size); i++)
+				{
+					_alloc.construct(_end, val);
+					_end++;
+				}
+			}
+			
+		}
 
 		/*CAPACITY: Returns the size of the storage space currently allocated for the vector,
 		expressed in terms of elements.
@@ -640,8 +646,11 @@ namespace ft {
 	 * Swap
 	**/
 
-	// template <class T, class Alloc>
-	// void swap(vector<T,Alloc>& x, vector<T,Alloc>& y);
+	template <class T, class Alloc>
+	void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
+	{
+		x.swap(y);
+	}
 
 }
 
