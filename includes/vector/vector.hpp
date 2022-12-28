@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/28 18:46:43 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/28 23:02:43 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -445,9 +445,21 @@ namespace ft {
 		// 	size_t _capacity = capacity();
 		// 	size_t	iterLen = last - first;
 		// 	_destroy(_start, _end);
-		// 	if (iterLen > capacity)
+		// 	if (iterLen > _capacity)
 		// 	{
-				
+		// 		_alloc.deallocate(_start, _capacity);
+		// 		_start = _alloc.allocate(iterLen);
+		// 		_end = _start;
+		// 		_end_capacity = _start + iterLen;
+		// 		while (first != last)
+		// 		{
+		// 			_alloc.construct(_end, *first);
+		// 			first++;
+		// 		}
+		// 	}
+		// 	else
+		// 	{
+		// 		_end = _copy(first, last, _start);
 		// 	}
 		// }
 
@@ -529,7 +541,14 @@ namespace ft {
 		erasing elements in positions other than the vector end causes the container to relocate all the
 		elements after the segment erased to their new positions. */
 
-		// iterator erase (iterator position);
+		iterator erase (iterator position)
+		{
+			std::cout << size() << "\n";
+			_destroy_copy(position + 1, end(), position);
+			_alloc.destroy(_end - 1);
+			_end--;
+			return (position);
+		}
 
 		// iterator erase (iterator first, iterator last);
 
@@ -600,15 +619,26 @@ namespace ft {
 		
 		template <typename InputIterator>
 		pointer
-		_copy(InputIterator begin, InputIterator end, iterator start)
+		_copy(InputIterator first, InputIterator last, iterator start)
 		{
-			while (begin != end)	
+			while (first != last)	
 			{
-				_alloc.construct(start++.base(), *begin++);
+				_alloc.construct(start++.base(), *first++);
 			}
 			return (start.base());
 		}
 
+		template <typename InputIterator>
+		iterator
+		_destroy_copy(InputIterator first, InputIterator last, iterator start)
+		{
+			while (first != last)	
+			{
+				_alloc.destroy(&(*start));
+				*start++ = *first++;
+			}
+			return (start);
+		}
 		
 		void	_destroy(pointer start, pointer end)
 		{
@@ -619,12 +649,12 @@ namespace ft {
 			}
 		}
 
-		void _grow(size_t to_add = 0)
+		void _grow(size_t n = 0)
 		{
-			if (capacity() == 0 && (to_add <= 1))
+			if (capacity() == 0 && (n <= 1))
 				reserve(1);
-			else if (to_add > capacity())
-				reserve(capacity() + to_add);
+			else if (n > capacity())
+				reserve(capacity() + n);
 			else
 				reserve(capacity() * 2);
 		}
