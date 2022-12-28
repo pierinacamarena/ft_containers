@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/27 19:19:38 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/28 15:47:37 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "../iterator/ft_random_access_iterator.hpp"
 #include "../iterator/ft_reverse_iterator.hpp"
 #include "../utils/nullptr.hpp"
+#include "ft_utils_vector.hpp"
 
 #include <iostream>
 #include <memory>
@@ -184,28 +185,28 @@ namespace ft {
 		them towards the begining, points the element right before the one pointed
 		by end()*/
 
-		// reverse_iterator rbegin()
-		// {
-		// 	return (reverse_iterator(end()));
-		// }
+		reverse_iterator rbegin()
+		{
+			return (reverse_iterator(end()));
+		}
 
-		// const_reverse_iterator rbegin() const
-		// {
-		// 	return (reverse_iterator(end()));
-		// }
+		const_reverse_iterator rbegin() const
+		{
+			return (reverse_iterator(end()));
+		}
 
 		/*REND: Returns a reverse iterator pointing to the theoretical element
 		preciding the first element in the vector*/
 
-		// reverse_iterator rend()
-		// {
-		// 	return (reverse_iterator(begin()));
-		// }
+		reverse_iterator rend()
+		{
+			return (reverse_iterator(begin()));
+		}
 
-		// const_reverse_iterator rend() const
-		// {
-		// 	return (reverse_iterator(begin()));
-		// }
+		const_reverse_iterator rend() const
+		{
+			return (reverse_iterator(begin()));
+		}
 
 		/*
 		******************************************
@@ -356,7 +357,6 @@ namespace ft {
 			if (n >= size())
 				throw(std::out_of_range("vector"));
 			return ((*this)[n]);
-			// return (_start[n]);
 		}
 
 		const_reference at (size_type n) const
@@ -364,7 +364,6 @@ namespace ft {
 			if (n >= size())
 				throw(std::out_of_range("vector"));
 			return ((*this)[n]);
-			// return (_start[n]);
 		}
 
 		/*FRONT: Returns a reference to the first element in the vector.
@@ -472,7 +471,10 @@ namespace ft {
 		*/
 
 		//single element
-		// iterator insert (iterator position, const value_type& val);
+		// iterator insert (iterator position, const value_type& val)
+		// {
+		// 	this should fail;
+		// }
 
 		//fill
 		// void insert (iterator position, size_type n, const value_type& val);
@@ -493,7 +495,25 @@ namespace ft {
 		of the same type. Sizes may differ.
 		All iterators, references and pointers remain valid for the swapped objects.*/
 
-		// void swap (vector& x);
+		void swap (vector& x)
+		{
+			if (*this == x)
+				return;
+			allocator_type	tmp_alloc = x._alloc;
+			pointer			tmp_start = x._start;
+			pointer			tmp_end = x._end;
+			pointer			tmp_capacity = x._end_capacity;
+
+			x._start = _start;
+			x._end = _end;
+			x._end_capacity = _end_capacity;
+			x._alloc = _alloc;
+
+			_alloc = tmp_alloc;
+			_start = tmp_start;
+			_end = tmp_end;
+			_end_capacity = tmp_capacity;	
+		}
 
 		/*CLEAR: Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		A reallocation is not guaranteed to happen, and the vector capacity
@@ -579,41 +599,41 @@ namespace ft {
 	 * Relational operators
 	**/
 
-	// template <class T, class Alloc>
-	// bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	// {
-	// 	return (lhs.size() == rhs.size && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-	// }
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
 
-	// template <class T, class Alloc>
-	// bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	// {
-	// 	return (!operator==(lhs, rhs));
-	// }
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!operator==(lhs, rhs));
+	}
 	
-	// template <class T, class Alloc>
-	// bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	// {
-	// 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-	// }
+	template <class T, class Alloc>
+	bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
 
-	// template <class T, class Alloc>
-	// bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	// {
-	// 	return (rhs < lhs);
-	// }
+	template <class T, class Alloc>
+	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (rhs < lhs);
+	}
 
-	// template <class T, class Alloc>
-	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	// {
-	// 	return (!operator<(rhs, lhs));
-	// }
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!operator<(rhs, lhs));
+	}
 	
-	// template <class T, class Alloc>
-	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	// {
-	// 	return (!operator<(lhs, rhs));
-	// }
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!operator<(lhs, rhs));
+	}
 
 
 	/**
