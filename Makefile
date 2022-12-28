@@ -5,22 +5,56 @@
 #                                                     +:+ +:+         +:+      #
 #    By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/12/02 16:27:01 by pcamaren          #+#    #+#              #
-#    Updated: 2022/12/02 16:36:11 by pcamaren         ###   ########.fr        #
+#    Created: 2022/12/26 17:15:13 by pcamaren          #+#    #+#              #
+#    Updated: 2022/12/28 15:24:43 by pcamaren         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME=containers_test
-CODEDIRS=. ./tests/
-INCDIRS=. ./includes/
+# SIMPLE 
+NAME			= ft_container_tester
+# ******************************************************************************
 
-CC=clang++
-DEPFLAGS=-MP -MD
-CFLAGS=-Wall -Wextra -Werror -std=c++98 $(foreach D, $(INCDIRS), -I$(D)) $(DEPFLAGS)
+# SRCS 
+SOURCES_FOLDER	= ./tests/
+SOURCES			=	main.cpp							
+# ******************************************************************************
+# INCLUDES
+ INCLUDE 		= ./includes/vector/*.hpp
+# ******************************************************************************
+# FLAGS 
+FLAGS 			= --std=c++98
+DEPS			= $(INCLUDES)
+# ******************************************************************************
+# OBJECTS 
+OBJECTS_FOLDER 	= ./tester/objects/
+OBJECT			= $(SOURCES:.cpp=.o)
+OBJECTS		 	= $(addprefix $(OBJECTS_FOLDER), $(OBJECT));
+# ******************************************************************************
+# RULES 
+$(OBJECTS_FOLDER)%.o :	$(SOURCES_FOLDER)%.cpp	$(DEPS) $(INCLUDE) 
+	@mkdir -p	$(OBJECTS_FOLDER)
+	@echo "Compiling: $<"
+	@clang++ -g $(FLAGS) -c $< -o $@
 
-CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.c))
-OBJECTS=$(patsubst %.c %.o, $(CFILES))
-DEPFILES=$(patsubst %.c, %.d, $(CFILES))
+$(NAME): $(OBJECTS)
+	@clang++ $(FLAGS) -o $(NAME) $(OBJECTS)
 
 all: $(NAME)
 
+clean:
+	@echo "Cleaning: $(OBJECTS_FOLDER)"
+	@rm -rf $(OBJECTS_FOLDER)
+	@echo "Cleaning: ./tester/vectors_output"
+	@rm -rf ./tester/vectors_output
+
+fclean: clean
+	@echo "Cleaning: $(NAME)"
+	@rm -f $(NAME)
+
+re: fclean all
+# ******************************************************************************
+# RULE TO RUN 
+run: $(NAME)
+	@./$(NAME)
+
+# ******************************************************************************
