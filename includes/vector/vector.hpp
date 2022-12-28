@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/28 16:54:14 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/28 18:37:41 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,24 @@ namespace ft {
 		}
 
 		/*Copy operator: Copies all the elements from x into the container*/
-		// vector& operator= (const vector& x);
+		vector& operator= (const vector& x)
+		{
+			if (*this == x)
+				return(*this);
+			_destroy(_start, _end);
+			size_t newLen = x.size();
+			if (newLen <= capacity())
+				_end = _copy(x.begin(), x.end(), _start);
+			else
+			{
+				pointer oldStart = _start;
+				_start = _alloc.allocate(newLen);
+				_alloc.deallocate(oldStart, capacity());
+				_end = _copy(x.begin(), x.end(), _start);
+				_end_capacity = _start + newLen;				
+			}
+			return (*this);
+		}
 
 		/*
 		******************************************
@@ -273,7 +290,6 @@ namespace ft {
 					_end++;
 				}
 			}
-			
 		}
 
 		/*CAPACITY: Returns the size of the storage space currently allocated for the vector,
@@ -422,10 +438,20 @@ namespace ft {
 		-This causes an automatic reallocation of the allocated storage space
 		if -and only if- the new vector size surpasses the current vector capacity.*/
 
-		//range version
-		// template <class InputIterator>  void assign (InputIterator first, InputIterator last);
+		// //range version
+		// template <class InputIterator>  
+		// void assign (InputIterator first, InputIterator last)
+		// {
+		// 	size_t _capacity = capacity();
+		// 	size_t	iterLen = last - first;
+		// 	_destroy(_start, _end);
+		// 	if (iterLen > capacity)
+		// 	{
+				
+		// 	}
+		// }
 
-		//fill version
+		// //fill version
 		// void assign (size_type n, const value_type& val)
 		// {
 		// 	size_t _capacity = capacity();
@@ -562,17 +588,16 @@ namespace ft {
 			return result;
 		}
 		
-		// template <typename InputIterator>
-		// pointer _alloc_copy(InputIterator start, InputIterator end, InputIterator newStart)
-		// {
-		// 	while (start != end)
-		// 	{
-		// 		_alloc.construct(newStart.base(), *start);
-		// 		newStart++;
-		// 		start++;
-		// 	}
-		// 	return (newStart.base());
-		// }
+		template <typename InputIterator>
+		pointer
+		_copy(InputIterator begin, InputIterator end, iterator start)
+		{
+			while (begin != end)	
+			{
+				_alloc.construct(start++.base(), *begin++);
+			}
+			return (start.base());
+		}
 
 		
 		void	_destroy(pointer start, pointer end)
