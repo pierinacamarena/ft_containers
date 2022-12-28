@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/28 18:37:41 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/28 18:46:43 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -451,25 +451,35 @@ namespace ft {
 		// 	}
 		// }
 
-		// //fill version
-		// void assign (size_type n, const value_type& val)
-		// {
-		// 	size_t _capacity = capacity();
-		// 	_destroy(_start, _end);
-		// 	if (n > _capacity)
-		// 	{
-		// 		_alloc.deallocate(_start, _capacity);
-		// 		_start = _alloc.allocate(n);
-		// 		_end = _start;
-		// 		_end_capacity = _start + n;
-		// 		while (n)
-		// 		{
-		// 			_alloc.construct(_end, val);
-		// 			_end++;
-		// 			n--;
-		// 		}
-		// 	}
-		// }
+		//fill version
+		void assign (size_type n, const value_type& val)
+		{
+			size_t _capacity = capacity();
+			_destroy(_start, _end);
+			if (n > _capacity)
+			{
+				_alloc.deallocate(_start, _capacity);
+				_start = _alloc.allocate(n);
+				_end = _start;
+				_end_capacity = _start + n;
+				while (n)
+				{
+					_alloc.construct(_end, val);
+					_end++;
+					n--;
+				}
+			}
+			else
+			{
+				_end = _start;
+				while(n)
+				{
+					_alloc.construct(_end, val);
+					_end++;
+					n--;
+				}
+			}
+		}
 
 		/*PUSH BACK: Adds a new element at the end of the vector, after its current last element.
 		The content of val is copied (or moved) to the new element.
