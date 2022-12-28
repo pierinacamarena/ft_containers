@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterator_traits.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 22:12:38 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/20 14:30:49 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/28 23:20:43 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,19 @@ namespace ft {
 		typedef	T&										reference;
 		typedef	std::random_access_iterator_tag			iterator_category;
 	};
-};
+
+template<class InputIterator>
+	typename ft::iterator_traits<InputIterator>::difference_type
+		distance(InputIterator first, InputIterator last)
+		{
+			typename ft::iterator_traits<InputIterator>::difference_type n = 0;
+			while (first != last)
+			{
+				first ++;
+				n++;
+			}
+			return (n);
+		}
+}
 
 #endif
