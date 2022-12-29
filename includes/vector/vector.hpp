@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/28 23:35:05 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/29 14:45:10 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -543,7 +543,7 @@ namespace ft {
 
 		iterator erase (iterator position)
 		{
-			_destroy_copy(position + 1, end(), position);
+			_destroy_and_copy(position + 1, end(), position);
 			_alloc.destroy(_end - 1);
 			_end--;
 			return (position);
@@ -551,19 +551,13 @@ namespace ft {
 
 		iterator erase (iterator first, iterator last)
 		{
-			//get the distance from begin to first
 			size_type begin_to_first = ft::distance(begin(), first);
 			size_type last_to_end = ft::distance(last, end());
 			size_type first_to_last = ft::distance(first, last);
-
-			std::cout << "begin_to_first: " << begin_to_first << '\n';
-			std::cout << "last to end: " << last_to_end << '\n';
-			std::cout << "first_to_last: " <<first_to_last << '\n';
-			_destroy_copy(last, end(), first);
-			_destroy(_start + begin_to_first + first_to_last, _end);
-			return (begin());
-			//get the distance from last to end
-			//get the distance from first to last
+			_destroy_and_copy(last, end(), first);
+			_destroy(_start + begin_to_first + last_to_end, _end);
+			_end = _end - first_to_last;
+			return (first);
 		}
 
 		/*SWAP: Exchanges the content of the container by the content of x, which is another vector object
@@ -644,7 +638,7 @@ namespace ft {
 
 		template <typename InputIterator>
 		iterator
-		_destroy_copy(InputIterator first, InputIterator last, iterator start)
+		_destroy_and_copy(InputIterator first, InputIterator last, iterator start)
 		{
 			while (first != last)	
 			{
