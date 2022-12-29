@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/29 15:52:32 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/29 23:23:14 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -534,7 +534,10 @@ namespace ft {
 				position = _start + distance_to_pos;
 			}
 			if (empty())
+			{
 				_alloc.construct(_start, val);
+				return (_start);
+			}
 			pointer	final_item = _end - 1;
 			_alloc.construct(_end, *final_item);
 			while (final_item != _start + distance_to_pos)
@@ -551,7 +554,44 @@ namespace ft {
 		}
 
 		//fill
-		// void insert (iterator position, size_type n, const value_type& val);
+		void insert (iterator position, size_type n, const value_type& val)
+		{
+			if (n == 0)
+			return;
+			std::cout << "length between end and capacity: "<< _end_capacity - _end << '\n';
+			if (size_type(_end_capacity - _end) >= n)
+			{
+				size_type	elems_after_pos = end() - position;
+				pointer		oldEnd = _end;
+				if (elems_after_pos > n)
+				{
+					_copy(end() - n, end(), end());
+					std::copy_backward(position.base(), oldEnd - n, oldEnd);
+					std::fill(position.base(), position.base() + n, val);
+				}
+				else
+				{
+					std::uninitialized_fill_n(_end, n - elems_after_pos, val);
+					std::uninitialized_copy(position.base(), oldEnd, _end + (n - elems_after_pos));
+					std::fill(position.base(), oldEnd, val);
+				}
+				_end += n;
+			}
+			else
+			{
+				size_type len = size() + std::max(n, size());
+				pointer new_start = _alloc.allocate(len);
+				pointer tmp;
+				tmp = std::uninitialized_copy(begin(), position, new_start);
+				std::uninitialized_fill_n(tmp, n, val);
+				tmp = std::uninitialized_copy(position, end(), tmp + n);
+				_destroy(_start, _end);
+				_alloc.deallocate(_start, capacity());
+				_start = new_start;
+				_end = tmp;
+				_end_capacity = _start + len;
+			}
+		}
 
 		//range
 		// template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
