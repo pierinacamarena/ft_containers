@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/29 14:45:10 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/29 15:52:32 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -524,11 +524,31 @@ namespace ft {
 		that were after position to their new positions.
 		*/
 
-		//single element
-		// iterator insert (iterator position, const value_type& val)
-		// {
-		// 	this should fail;
-		// }
+		// single element
+		iterator insert (iterator position, const value_type& val)
+		{
+			size_t	distance_to_pos = &(*position) - _start;
+			if (size() == capacity())
+			{
+				_grow();
+				position = _start + distance_to_pos;
+			}
+			if (empty())
+				_alloc.construct(_start, val);
+			pointer	final_item = _end - 1;
+			_alloc.construct(_end, *final_item);
+			while (final_item != _start + distance_to_pos)
+			{
+				_alloc.destroy(final_item);
+				_alloc.construct(final_item, *(final_item - 1));
+				final_item--;
+			}
+			if (!empty())
+				_alloc.destroy(_start + distance_to_pos);
+			_alloc.construct(_start + distance_to_pos, val);
+			_end++;
+			return (position);
+		}
 
 		//fill
 		// void insert (iterator position, size_type n, const value_type& val);
