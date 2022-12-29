@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/29 23:23:14 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/29 23:59:57 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,19 @@ namespace ft {
 		with each element constructed from its corresponding element in that range,
 		in the same order*/
 		
-		// template <class InputIterator> 
-		// 	vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+		template <class InputIterator> 
+			vector (InputIterator first, 
+				InputIterator last, 
+				const allocator_type& alloc = allocator_type(),
+				typename enable_if<!is_integral<InputIterator>::value, int>::type test = 0)
+				:_alloc(alloc)
+			{
+				(void)test;
+				difference_type len = ft::distance(first, last);
+				_start = _alloc.allocate(len);
+				_end = _copy(first, last, _start);
+				_end_capacity = _end;				
+			}
 
 		/*Constructs a container with a copy of each of the elements in x, in the same order*/
 		vector (const vector& x)
@@ -593,8 +604,11 @@ namespace ft {
 			}
 		}
 
-		//range
-		// template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
+		// range
+		// template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last)
+		// {
+			
+		// }
 
 		/*ERASE: Removes from the vector either a single element (position) or a range of elements ([first,last)).
 		This effectively reduces the container size by the number of elements removed, which are destroyed.
@@ -650,7 +664,8 @@ namespace ft {
 
 		void clear()
 		{
-			for (size_t i = 0; i < size(); i++)
+			size_type original_size = this->size();
+			for (size_type i = 0; i < original_size; i++)
 			{
 				_end--;
 				_alloc.destroy(_end);
@@ -787,8 +802,4 @@ namespace ft {
 
 }
 
-
 #endif
-
-
-//rooteleven
