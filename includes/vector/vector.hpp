@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/29 23:59:57 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/30 17:26:00 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,29 +450,36 @@ namespace ft {
 		if -and only if- the new vector size surpasses the current vector capacity.*/
 
 		// //range version
-		// template <class InputIterator>  
-		// void assign (InputIterator first, InputIterator last)
-		// {
-		// 	size_t _capacity = capacity();
-		// 	size_t	iterLen = last - first;
-		// 	_destroy(_start, _end);
-		// 	if (iterLen > _capacity)
-		// 	{
-		// 		_alloc.deallocate(_start, _capacity);
-		// 		_start = _alloc.allocate(iterLen);
-		// 		_end = _start;
-		// 		_end_capacity = _start + iterLen;
-		// 		while (first != last)
-		// 		{
-		// 			_alloc.construct(_end, *first);
-		// 			first++;
-		// 		}
-		// 	}
-		// 	else
-		// 	{
-		// 		_end = _copy(first, last, _start);
-		// 	}
-		// }
+		template <class InputIterator>  
+		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!is_integral<InputIterator>::value, int>::type = 0)
+		{
+			size_type n = ft::distance(first, last);
+			if (n > capacity()) 
+			{	//not enough capacity 
+				_destroy(_start, _end); 
+				_alloc.deallocate(_start, capacity());
+				_start = _alloc.allocate(n);
+				_copy(first, last, _start);
+				_end = _start + n;
+				_end_capacity = _end;
+			}
+			else if (first.base() >= _start && first.base() < _end)
+			{	//if i am assigning content from *this
+				vector<T> tmp(*this);//copy *this, as i will need its content.
+				size_type start_to_first = ft::distance(begin(), first);
+				size_type start_to_last = ft::distance(begin(), last);
+				_destroy(_start, _end);
+				_copy(tmp.begin() + start_to_first, tmp.begin() + start_to_last, _start);
+				_end = _start + n;
+			}
+			else
+			{	//if i am assigning content from a different vector
+				//and i have enough capacity for it 
+				_destroy(_start, _end); 
+				_copy(first, last, _start);
+				_end = _start + n;
+			}
+		}
 
 		//fill version
 		void assign (size_type n, const value_type& val)
@@ -517,6 +524,7 @@ namespace ft {
 			_end++;
 		}
 
+
 		/*POP_BACK: Removes the last element in the vector, effectively reducing the container size by one.
 		This destroys the removed element.*/
 
@@ -538,30 +546,9 @@ namespace ft {
 		// single element
 		iterator insert (iterator position, const value_type& val)
 		{
-			size_t	distance_to_pos = &(*position) - _start;
-			if (size() == capacity())
-			{
-				_grow();
-				position = _start + distance_to_pos;
-			}
-			if (empty())
-			{
-				_alloc.construct(_start, val);
-				return (_start);
-			}
-			pointer	final_item = _end - 1;
-			_alloc.construct(_end, *final_item);
-			while (final_item != _start + distance_to_pos)
-			{
-				_alloc.destroy(final_item);
-				_alloc.construct(final_item, *(final_item - 1));
-				final_item--;
-			}
-			if (!empty())
-				_alloc.destroy(_start + distance_to_pos);
-			_alloc.construct(_start + distance_to_pos, val);
-			_end++;
-			return (position);
+			size_type distance_to_pos = ft::distance(begin(), position);
+			insert(position, 1, val);
+			return (begin() + distance_to_pos);
 		}
 
 		//fill
@@ -569,7 +556,6 @@ namespace ft {
 		{
 			if (n == 0)
 			return;
-			std::cout << "length between end and capacity: "<< _end_capacity - _end << '\n';
 			if (size_type(_end_capacity - _end) >= n)
 			{
 				size_type	elems_after_pos = end() - position;
@@ -577,13 +563,13 @@ namespace ft {
 				if (elems_after_pos > n)
 				{
 					_copy(end() - n, end(), end());
-					std::copy_backward(position.base(), oldEnd - n, oldEnd);
+					_copy_backward(position.base(), oldEnd - n, oldEnd);
 					std::fill(position.base(), position.base() + n, val);
 				}
 				else
 				{
-					std::uninitialized_fill_n(_end, n - elems_after_pos, val);
-					std::uninitialized_copy(position.base(), oldEnd, _end + (n - elems_after_pos));
+					_uninitialized_fill_n(_end, n - elems_after_pos, val);
+					_copy(position.base(), oldEnd, _end + (n - elems_after_pos));
 					std::fill(position.base(), oldEnd, val);
 				}
 				_end += n;
@@ -593,9 +579,9 @@ namespace ft {
 				size_type len = size() + std::max(n, size());
 				pointer new_start = _alloc.allocate(len);
 				pointer tmp;
-				tmp = std::uninitialized_copy(begin(), position, new_start);
-				std::uninitialized_fill_n(tmp, n, val);
-				tmp = std::uninitialized_copy(position, end(), tmp + n);
+				tmp = _copy(begin(), position, new_start);
+				_uninitialized_fill_n(tmp, n, val);
+				tmp = _copy(position, end(), tmp + n);
 				_destroy(_start, _end);
 				_alloc.deallocate(_start, capacity());
 				_start = new_start;
@@ -605,10 +591,46 @@ namespace ft {
 		}
 
 		// range
-		// template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last)
-		// {
-			
-		// }
+		template <class InputIterator>    
+		void insert (iterator position, InputIterator first, InputIterator last, typename enable_if< !is_integral<InputIterator>::value, int>::type = 0)
+		{
+				if (first == last)
+				return;
+				const size_type n = ft::distance(first, last);
+				if (size_type(_end_capacity - _end) >= n)
+				{
+					const size_type elemsAfterPos = end() - position;
+					pointer oldFinish(_end);
+					if (elemsAfterPos > n)
+					{
+						_copy(_end - n, _end, end().base());
+						_copy_backward(position.base(), oldFinish - n, oldFinish);
+						_destroy_and_copy(first, last, position);
+						_end += n;
+					}
+					else
+					{
+						_copy(position, end(), position + n);
+						_destroy_and_copy(first, first + (end() - position), position);
+						_copy(first + (end() - position), last, end());	
+					_end = _end + n;
+					}
+				}
+				else
+				{
+					size_type new_capacity = capacity() + std::max(n, capacity());
+					pointer futur_start = _alloc.allocate(new_capacity);
+					pointer tmp;
+					tmp  = _copy(begin(), position, futur_start);
+					tmp = _copy(first, last, tmp);
+					tmp = _copy(position, end(), tmp);
+					_destroy(_start, _end);
+					_alloc.deallocate(_start, capacity());
+					_start = futur_start;
+					_end = tmp;
+					_end_capacity = _start + new_capacity;
+				}
+		}
 
 		/*ERASE: Removes from the vector either a single element (position) or a range of elements ([first,last)).
 		This effectively reduces the container size by the number of elements removed, which are destroyed.
@@ -678,14 +700,38 @@ namespace ft {
 		******************************************
 		*/
 
-		void	_alloc_fill_n(pointer start, size_t n, const value_type& val)
+		void
+		_uninitialized_fill_n(pointer start, size_type n, const value_type &val)
 		{
-			for(size_t i = 0; i < n; i++)
-			{
-				_alloc.construct(_start, val);
+			for (size_type i = 0; i < n; i++)
+			{		
+				_alloc.construct(start, val);
 				start++;
 			}
 		}
+
+		void
+		_initialized_fill_n(pointer start, size_type n, const value_type &val)
+		{
+			for (size_type i = 0; i < n; i++)
+			{		
+				_alloc.destroy(start);
+				_alloc.construct(start, val);
+				start++;
+			}
+		}
+
+		void
+		_copy_backward(iterator first, iterator last, iterator end)
+		{
+			while (last > first)
+			{
+				--last;
+				--end;
+				_alloc.destroy(end.base());
+				_alloc.construct(end.base(), *last);
+			}
+		}	
 
 		pointer _allocate(size_type n)
 		{
