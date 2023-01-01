@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_enable_if.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:05:50 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/18 20:12:06 by pierina          ###   ########.fr       */
+/*   Updated: 2022/12/28 16:07:11 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ namespace ft {
 	struct enable_if<true, T> {
 		typedef T type;
 	};
-
 }
 
 #endif

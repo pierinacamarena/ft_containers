@@ -6,12 +6,14 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 09:37:20 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/26 17:50:42 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/27 12:22:27 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef _FT_EQUAL_
 #define _FT_EQUAL_
+
+#include <sstream>
 
 namespace ft {
 	
@@ -34,7 +36,7 @@ namespace ft {
 			++first2;
 		}
 		return (true);
-	}
+	};
 	
 	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 	bool equal(InputIterator1 first1, InputIterator1 last1,
@@ -48,7 +50,7 @@ namespace ft {
 			++first2;
 		}
 		return (true);
-	}
+	};
 }
 
 #endif
