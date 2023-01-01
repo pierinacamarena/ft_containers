@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 22:12:38 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/28 23:20:43 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/01 19:33:09 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ namespace ft {
 
 	struct biderectional_iterator_tag{};
 	struct random_access_iterator_tag{};
+	struct input_iterator_tag{};
+	struct forward_iterator_tag{};
+	
 	
 	template<class Iterator>
 	struct iterator_traits {
@@ -50,8 +53,8 @@ namespace ft {
 		typedef	T&										reference;
 		typedef	std::random_access_iterator_tag			iterator_category;
 	};
-
-template<class InputIterator>
+	
+	template<class InputIterator>
 	typename ft::iterator_traits<InputIterator>::difference_type
 		distance(InputIterator first, InputIterator last)
 		{
