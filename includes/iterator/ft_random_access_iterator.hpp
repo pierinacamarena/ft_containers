@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 16:10:56 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/31 13:50:15 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/01 21:01:31 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,25 @@
 #include "../utils/nullptr.hpp"
 #include <iostream>
 
+
 namespace ft
 {
 	template<typename T>
-    class random_access_iterator : ft::iterator<random_access_iterator_tag, T>
+    struct random_access_iterator
     {
 
-	/*********Random_access_iterator typedefs*********/
+		/*********Random_access_iterator typedefs*********/
 
-    public:
+		public:
 
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category	iterator_category;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
-		typedef	typename ft::iterator<ft::random_access_iterator_tag, T>::pointer			pointer;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference			reference;
+		typedef T	value_type;
+		typedef value_type	&reference;
+		typedef value_type	*pointer;
+
+		typedef std::random_access_iterator_tag		iterator_category;
+		typedef std::ptrdiff_t						difference_type;
+
+		typedef random_access_iterator<value_type> Self;
 
 		//constructors
 
@@ -40,9 +44,6 @@ namespace ft
 		random_access_iterator(pointer ptr) : _ptr(ptr) {}
 		random_access_iterator(const random_access_iterator &it) : _ptr(it._ptr) {}
 
-		//destructor
-		
-		virtual ~random_access_iterator() {}
 		
 		//conversion to another type, when it is instantiated with const
 		operator random_access_iterator<const T>() const
