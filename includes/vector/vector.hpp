@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/01 22:28:31 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/01 23:04:57 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -601,7 +601,10 @@ namespace ft {
 		iterator insert (iterator position, const value_type& val)
 		{
 			size_type distance_to_pos = ft::distance(begin(), position);
-			insert(position, 1, val);
+			if (_end != _end_capacity)
+				_alloc.construct(_end++, val);
+			else
+				insert(position, 1, val);
 			return (begin() + distance_to_pos);
 		}
 
