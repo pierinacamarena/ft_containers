@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/30 17:26:00 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/01 18:07:39 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,17 @@ namespace ft {
 			_end(nullptr_t),
 			_end_capacity(nullptr_t)
 		{
-			_start = _alloc.allocate(n);
-			_end = _start + n;
-			_end_capacity = _end;
-			while (n > 0)
-				_alloc.construct(_start + --n, val);
+			// std::cout << "HERE HERE HERE 111: " << '\n';
+			if (n > max_size())
+				throw(std::length_error("vector::reserve"));
+			if (n > 0)
+			{
+				_start = _alloc.allocate(n);
+				_end = _start + n;
+				_end_capacity = _end;
+				while (n > 0)
+					_alloc.construct(_start + --n, val);
+			}
 		}
 
 		/*Constructs a container with as many elements as the range [first, last],
@@ -122,6 +128,10 @@ namespace ft {
 			{
 				(void)test;
 				difference_type len = ft::distance(first, last);
+				if (size() > 0)
+					_destroy(_start, _end);
+				if (capacity() > 0)
+					_alloc.deallocate(_start, capacity());
 				_start = _alloc.allocate(len);
 				_end = _copy(first, last, _start);
 				_end_capacity = _end;				
@@ -133,33 +143,53 @@ namespace ft {
 			if (this == &x )
 				return;
 			const size_type otherLen = x.size();
-			_start = _alloc_copy(otherLen, x.begin(), x.end());
+			if (size() > 0)
+				_destroy(_start, _end);
+			_start = _alloc.allocate(otherLen);
+			_end = _start;
+			_copy(x.begin(), x.end(), _end);
 			_end = _start + otherLen;
 			_end_capacity = _end;
 			_alloc = x._alloc;
 		}
 
 		/*Destructor*/
-		~vector()
+		virtual ~vector()
 		{
-			clear();
-			_alloc.deallocate(_start, capacity());
+			while (_end != _start)
+			{
+				--_end;
+				_alloc.destroy(_end);
+			}
+			if (capacity() != 0)
+				_alloc.deallocate(_start, capacity());
 		}
 
 		/*Copy operator: Copies all the elements from x into the container*/
 		vector& operator= (const vector& x)
 		{
+			size_type original_capacity = capacity();
+			// std::cout << "here" << '\n';
 			if (*this == x)
 				return(*this);
-			_destroy(_start, _end);
+			if (size() > 0)
+				_destroy(_start, _end);
 			size_t newLen = x.size();
 			if (newLen <= capacity())
+			{
 				_end = _copy(x.begin(), x.end(), _start);
+			}
 			else
 			{
+				// std::cout << "second if: " << '\n';
 				pointer oldStart = _start;
 				_start = _alloc.allocate(newLen);
-				_alloc.deallocate(oldStart, capacity());
+				// std::cout << "capacity is: " << capacity() << '\n';
+				if (original_capacity > 0)
+				{
+					// std::cout << "here" << '\n';
+					_alloc.deallocate(oldStart, capacity());
+				}
 				_end = _copy(x.begin(), x.end(), _start);
 				_end_capacity = _start + newLen;				
 			}
@@ -278,6 +308,8 @@ namespace ft {
 		void resize (size_type n, value_type val = value_type())
 		{
 			size_t tmp_size = size();
+			if (n > max_size())
+				throw(std::length_error("vector::reserve"));
 			if (n == tmp_size)
 				return ;
 			if (n < tmp_size)
@@ -336,25 +368,28 @@ namespace ft {
 		{
 			if (n > max_size())
 				throw(std::length_error("vector::reserve"));
+			if (capacity() == 0 && n > 0)
+			{
+				_start = _alloc.allocate(n);
+				_end = _start;
+				_end_capacity = _start + n;
+			}		
 			else if (n > capacity())
 			{
-				pointer old_start = _start;
-				pointer old_end = _end;
-				size_type old_size = size();
-				size_type old_capacity = capacity();
-					
-				_start = _alloc.allocate(n);
-				_end_capacity = _start + n;
-				_end = _start;
-				for (; old_start != old_end; old_start++)
+				pointer tmp;
+				tmp = _alloc.allocate(n);
+				_copy(begin(), end(), tmp);
+				if (n > 1)
 				{
-					_alloc.construct(_end, *old_start);
-					_end++;
+					_destroy(_start, _end);
+					_alloc.deallocate(_start, capacity());
 				}
-				_alloc.deallocate(old_start - old_size, old_capacity);
+				_end = tmp + size();
+				_start = tmp;
+				_end_capacity = _start + n;
 			}
 		}
-
+		
 		/*
 		******************************************
 		 * Element access functions
@@ -457,7 +492,8 @@ namespace ft {
 			if (n > capacity()) 
 			{	//not enough capacity 
 				_destroy(_start, _end); 
-				_alloc.deallocate(_start, capacity());
+				if (capacity() > 0)
+					_alloc.deallocate(_start, capacity());
 				_start = _alloc.allocate(n);
 				_copy(first, last, _start);
 				_end = _start + n;
@@ -488,7 +524,8 @@ namespace ft {
 			_destroy(_start, _end);
 			if (n > _capacity)
 			{
-				_alloc.deallocate(_start, _capacity);
+				if (capacity() > 0)
+					_alloc.deallocate(_start, _capacity);
 				_start = _alloc.allocate(n);
 				_end = _start;
 				_end_capacity = _start + n;
@@ -554,8 +591,11 @@ namespace ft {
 		//fill
 		void insert (iterator position, size_type n, const value_type& val)
 		{
+			if (n > max_size())
+				throw(std::length_error("vector::reserve"));
 			if (n == 0)
-			return;
+				return;
+			size_type original_capacity = capacity();
 			if (size_type(_end_capacity - _end) >= n)
 			{
 				size_type	elems_after_pos = end() - position;
@@ -582,8 +622,10 @@ namespace ft {
 				tmp = _copy(begin(), position, new_start);
 				_uninitialized_fill_n(tmp, n, val);
 				tmp = _copy(position, end(), tmp + n);
-				_destroy(_start, _end);
-				_alloc.deallocate(_start, capacity());
+				if (size() > 0)
+					_destroy(_start, _end);
+				if (original_capacity > 0)
+					_alloc.deallocate(_start, capacity());
 				_start = new_start;
 				_end = tmp;
 				_end_capacity = _start + len;
@@ -624,8 +666,10 @@ namespace ft {
 					tmp  = _copy(begin(), position, futur_start);
 					tmp = _copy(first, last, tmp);
 					tmp = _copy(position, end(), tmp);
-					_destroy(_start, _end);
-					_alloc.deallocate(_start, capacity());
+					if (size() > 0)
+						_destroy(_start, _end);
+					if (capacity() > 0)
+						_alloc.deallocate(_start, capacity());
 					_start = futur_start;
 					_end = tmp;
 					_end_capacity = _start + new_capacity;
@@ -639,21 +683,18 @@ namespace ft {
 
 		iterator erase (iterator position)
 		{
-			_destroy_and_copy(position + 1, end(), position);
-			_alloc.destroy(_end - 1);
-			_end--;
-			return (position);
+			return (_m_erase_one_position(position));
 		}
 
 		iterator erase (iterator first, iterator last)
 		{
-			size_type begin_to_first = ft::distance(begin(), first);
-			size_type last_to_end = ft::distance(last, end());
-			size_type first_to_last = ft::distance(first, last);
-			_destroy_and_copy(last, end(), first);
-			_destroy(_start + begin_to_first + last_to_end, _end);
-			_end = _end - first_to_last;
-			return (first);
+			if (first != last)
+			{
+				if (last != end())
+					std::copy(last, end(), first);
+				_m_erase_at_end(first.base() + (end() - last));
+			}
+			return first;
 		}
 
 		/*SWAP: Exchanges the content of the container by the content of x, which is another vector object
@@ -686,10 +727,9 @@ namespace ft {
 
 		void clear()
 		{
-			size_type original_size = this->size();
-			for (size_type i = 0; i < original_size; i++)
+			while (_end != _start)
 			{
-				_end--;
+				--_end;
 				_alloc.destroy(_end);
 			}
 		}
@@ -699,6 +739,36 @@ namespace ft {
 		 * private_functions
 		******************************************
 		*/
+
+		iterator _m_erase_one_position(iterator position)
+		{
+			if (position.base() + 1 != _end)
+				std::copy(position + 1, end(), position);
+			--_end;
+			_alloc.destroy(_end);
+			return position;
+		}
+
+		void _m_erase_at_end(pointer p)
+		{
+			const size_type n = _end - p;
+			pointer it = p + n;
+			if (n)
+			{
+				while(it != p)
+					_alloc.destroy(--it);
+				_end = p;
+			}
+		}
+
+		void _destroy(pointer start, pointer end)
+		{
+			while (start != end)
+			{
+				_alloc.destroy(start);
+				start++;
+			}
+		}
 
 		void
 		_uninitialized_fill_n(pointer start, size_type n, const value_type &val)
@@ -769,19 +839,13 @@ namespace ft {
 			return (start);
 		}
 		
-		void	_destroy(pointer start, pointer end)
-		{
-			while (start != end)
-			{
-				_alloc.destroy(start);
-				start++;
-			}
-		}
 
 		void _grow(size_t n = 0)
 		{
 			if (capacity() == 0 && (n <= 1))
+			{
 				reserve(1);
+			}
 			else if (n > capacity())
 				reserve(capacity() + n);
 			else
