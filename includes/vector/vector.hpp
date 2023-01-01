@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/01 18:07:39 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/01 19:20:54 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ namespace ft {
 			_end(nullptr_t),
 			_end_capacity(nullptr_t)
 		{
-			// std::cout << "HERE HERE HERE 111: " << '\n';
 			if (n > max_size())
 				throw(std::length_error("vector::reserve"));
 			if (n > 0)
@@ -121,12 +120,13 @@ namespace ft {
 		
 		template <class InputIterator> 
 			vector (InputIterator first, 
-				InputIterator last, 
-				const allocator_type& alloc = allocator_type(),
-				typename enable_if<!is_integral<InputIterator>::value, int>::type test = 0)
-				:_alloc(alloc)
+				typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
+				const allocator_type& alloc = allocator_type())
+				:_alloc(alloc),
+				_start(nullptr_t),
+				_end(nullptr_t),
+				_end_capacity(nullptr_t)
 			{
-				(void)test;
 				difference_type len = ft::distance(first, last);
 				if (size() > 0)
 					_destroy(_start, _end);
@@ -242,15 +242,16 @@ namespace ft {
 		vector, reverse iterators iterate backwards, increasing them means moving
 		them towards the begining, points the element right before the one pointed
 		by end()*/
+		
 
 		reverse_iterator rbegin()
 		{
-			return (reverse_iterator(end()));
+			return end();
 		}
 
 		const_reverse_iterator rbegin() const
 		{
-			return (reverse_iterator(end()));
+			return end();
 		}
 
 		/*REND: Returns a reverse iterator pointing to the theoretical element
@@ -258,12 +259,12 @@ namespace ft {
 
 		reverse_iterator rend()
 		{
-			return (reverse_iterator(begin()));
+			return begin();
 		}
 
 		const_reverse_iterator rend() const
 		{
-			return (reverse_iterator(begin()));
+			return begin();
 		}
 
 		/*
@@ -462,6 +463,11 @@ namespace ft {
 		const_reference back() const
 		{
 			return (*(_end - 1));
+		}
+
+		allocator_type get_allocator() const
+		{
+			return (_alloc);
 		}
 
 		/*
@@ -739,6 +745,21 @@ namespace ft {
 		 * private_functions
 		******************************************
 		*/
+
+		void check_size(size_type count)
+		{
+			if (count > max_size()) {
+				throw(std::length_error("vector::reserve"));
+			}
+		}
+
+		pointer construct_range(pointer dst, const_pointer end, const_reference value)
+		{
+			for (; dst != end; ++dst) {
+				_alloc.construct(dst, value);
+			}
+			return dst;
+		}
 
 		iterator _m_erase_one_position(iterator position)
 		{
