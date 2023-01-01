@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 16:10:56 by pierina           #+#    #+#             */
-/*   Updated: 2022/12/27 15:47:52 by pcamaren         ###   ########.fr       */
+/*   Updated: 2022/12/31 13:50:15 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ namespace ft
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category	iterator_category;
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
-		typedef	T*																			pointer;
-		typedef T&																			reference;
+		typedef	typename ft::iterator<ft::random_access_iterator_tag, T>::pointer			pointer;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference			reference;
 
 		//constructors
 
@@ -130,7 +130,7 @@ namespace ft
 		{
 			random_access_iterator tmp = _ptr;
 			--_ptr;
-			return (*this);
+			return (tmp);
 		}
 
 		/**
@@ -154,23 +154,25 @@ namespace ft
 		
 		
 		/**
-		**************************************************
+		**************************************************\
 		 * random_access_iterator: compound assignment
 		 * operators
 		**************************************************
 		**/
-		random_access_iterator operator+=(difference_type n) const
+		random_access_iterator operator+=(difference_type n)
 		{
-			return (_ptr += n);
+			_ptr += n;
+			return (*this);
 		}
-		random_access_iterator operator-=(difference_type n) const
+		random_access_iterator operator-=(difference_type n)
 		{
-			return (_ptr -= n);
+			_ptr -= n;
+			return (*this);
 		}
 
 		protected:
-			//atributtes 
 			pointer _ptr;
+			//atributtes 
 	};
 	
 		/**
