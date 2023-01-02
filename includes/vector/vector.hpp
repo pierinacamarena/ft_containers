@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/01 23:04:57 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/02 19:16:04 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
-// #include "ft_utils_vector.hpp"
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -122,17 +121,17 @@ namespace ft {
 			vector (InputIterator first, 
 				typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
 				const allocator_type& alloc = allocator_type())
-				:_alloc(alloc),
-				_start(nullptr_t),
-				_end(nullptr_t),
-				_end_capacity(nullptr_t)
+				: _alloc(alloc),
+				  _start(nullptr_t),
+				  _end(nullptr_t),
+				  _end_capacity(nullptr_t)
 			{
 				difference_type len = ft::distance(first, last);
 				if (size() > 0)
 					_destroy(_start, _end);
 				if (capacity() > 0)
 					_alloc.deallocate(_start, capacity());
-				_start = _alloc.allocate(len);
+				_start = _alloc.allocate(len);		
 				_end = _copy(first, last, _start);
 				_end_capacity = _end;				
 			}
@@ -601,7 +600,7 @@ namespace ft {
 		iterator insert (iterator position, const value_type& val)
 		{
 			size_type distance_to_pos = ft::distance(begin(), position);
-			if (_end != _end_capacity)
+			if (_end != _end_capacity && position == (end() - 1))
 				_alloc.construct(_end++, val);
 			else
 				insert(position, 1, val);
