@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/02 19:16:04 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/03 14:54:09 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
+
+#include <cstdlib>
+#include <cstdio>
+
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -126,11 +130,8 @@ namespace ft {
 				  _end(nullptr_t),
 				  _end_capacity(nullptr_t)
 			{
-				difference_type len = ft::distance(first, last);
-				if (size() > 0)
-					_destroy(_start, _end);
-				if (capacity() > 0)
-					_alloc.deallocate(_start, capacity());
+				
+				difference_type len = std::distance(first, last);
 				_start = _alloc.allocate(len);		
 				_end = _copy(first, last, _start);
 				_end_capacity = _end;				
@@ -168,7 +169,6 @@ namespace ft {
 		vector& operator= (const vector& x)
 		{
 			size_type original_capacity = capacity();
-			// std::cout << "here" << '\n';
 			if (*this == x)
 				return(*this);
 			if (size() > 0)
@@ -180,13 +180,10 @@ namespace ft {
 			}
 			else
 			{
-				// std::cout << "second if: " << '\n';
 				pointer oldStart = _start;
 				_start = _alloc.allocate(newLen);
-				// std::cout << "capacity is: " << capacity() << '\n';
 				if (original_capacity > 0)
 				{
-					// std::cout << "here" << '\n';
 					_alloc.deallocate(oldStart, capacity());
 				}
 				_end = _copy(x.begin(), x.end(), _start);
@@ -245,12 +242,12 @@ namespace ft {
 
 		reverse_iterator rbegin()
 		{
-			return end();
+			return (end());
 		}
 
 		const_reverse_iterator rbegin() const
 		{
-			return end();
+			return (end());
 		}
 
 		/*REND: Returns a reverse iterator pointing to the theoretical element
@@ -258,7 +255,7 @@ namespace ft {
 
 		reverse_iterator rend()
 		{
-			return begin();
+			return (begin());
 		}
 
 		const_reverse_iterator rend() const
@@ -673,9 +670,9 @@ namespace ft {
 					{
 						InputIterator mid = first;
 						std::advance(mid, elemsAfterPos);
-						std::uninitialized_copy(mid, last, _end);
+						_copy(mid, last, _end);
 						_end += n - elemsAfterPos;
-						std::uninitialized_copy(position.base(), oldFinish, _end);
+						_copy(position.base(), oldFinish, _end);
 						_end += elemsAfterPos;
 						std::copy(first, mid, position);
 					}
