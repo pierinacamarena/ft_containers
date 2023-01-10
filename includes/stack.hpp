@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_stack.hpp                                       :+:      :+:    :+:   */
+/*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierina <pierina@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 15:08:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2022/12/19 14:51:25 by pierina          ###   ########.fr       */
+/*   Updated: 2023/01/10 05:23:31 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <iostream>
 #include <vector>
+#include "vector.hpp"
+
 
 namespace ft {
 	
@@ -28,21 +30,19 @@ namespace ft {
 		**************************************************
 		**/
 
-		typedef T			value_type;
-
-		typedef Container	container_type;
-
-		typedef size_t		size_type;
+		typedef typename Container::value_type			value_type;
+		typedef Container								container_type;
+		typedef typename Container::size_type			size_type;
 
 		
-		private:
 		/**
 		**************************************************
 		 * Attributes, data
 		**************************************************
 		**/
 		
-		container_type _container;
+		private:
+		Container _container;
 
 		public:
 		/**
@@ -61,11 +61,11 @@ namespace ft {
 		object as data. This container object is a copy of 
 		the ctnr argument passed to the constructor, if any,
 		otherwise it is an empty container.*/
-		explicit stack (const container_type& ctnr = container_type()) :
+		explicit stack (const Container & ctnr = Container()) :
 			_container(ctnr)
-		{};
+		{}
 
-		virtual ~stack(void) {};
+		// virtual ~stack(void) {};
 		/*
 		******************************************
 		 * Capacity functions
@@ -142,23 +142,24 @@ namespace ft {
 		/**
 		 * Relational operators
 		**/
+		private:
+	template<class T1, class Container1>
+	friend bool operator==(const stack<T1, Container1>&, const stack<T1, Container1>&);
 	
-		friend
-		template <class T, class Container>
-		bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-		{
-			return (lhs._container == rhs._container);
-		}
-		
-		friend
-		template <class T, class Container>
-		bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-		{
-			return (lhs._container < rhs._container);
-		}
+	template<class T1, class Container1>
+	friend bool operator<(const stack<T1, Container1>&, const stack<T1, Container1>&);	
 	};
 
+	template<class T, class Container>
+	inline bool
+	operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+	{ return lhs._container == rhs._container; }
 
+	template<class T, class Container>
+	inline bool
+	operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+	{ return lhs._container < rhs._container; }
+	
 	template <class T, class Container>
 	bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
@@ -168,7 +169,7 @@ namespace ft {
 	template <class T, class Container>
 	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (!operator<(rhs, lhs));
+		return (!(rhs < lhs));
 	}
 
 	template <class T, class Container>
@@ -180,7 +181,7 @@ namespace ft {
 	template <class T, class Container>
 	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (operator<(lhs, rhs));
+		return (!(lhs < rhs));
 	}
 	
 }

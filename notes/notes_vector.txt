@@ -1,0 +1,102 @@
+Constructors:
+
+empty container constructor: done, set all private attributes to null as the container is empty
+Fill constructor:
+	//here it will be a constructor of n size
+		to do this we use the .allocate(n)// this will allocate space for n of the given type
+	//we set the start pointer to be allocator.allocate
+	//we set the end pointer by moving it n places
+	//we set the capacity pointer by making it equal to the end
+	//now we have to construct what we have allocated with the value
+		loop n times
+			alloc.construct(pointer, value);
+range constructor
+
+//LEAVE THIS CONSTRUCTOR FOR LATER
+	for this vector constructor i need to have a good understanding of enable if
+	and what i am checking
+	what i need to check is that it is an input iterator, this is done with enable if
+	ft::enable_if<!(ft::is_integral<InputIterator>::value)>, InputIterator>::type* = NULL)
+
+Copy constructor:
+	//do later
+	steps:
+		1. allocate(sizeof(other)) this can be done directly to _start or to a new pointer 
+		2. do an unitialized_copy of the elements in the other vector (use iterators for this, begin and end functions will help)
+			-this unitialized copy function can be made as a private function
+			-remember unitialized copy returns to the element past the last element copied.
+			-this can be done for _end;
+		3. set capacity = end
+		4. set alloc = other.alloc
+
+Destructor
+	steps:
+		1. clear();
+		2. alloc.deallocate
+
+copy operator:
+	-Requirements:
+		-if new size <= capacity 
+			-Assign new content to the container, replacing current content, modifying the size accordingly
+		else:
+			modify the capacity 
+				what does modifying the capacity look like?
+					
+	steps:
+		check that this is different to the vector we are copying
+
+
+TO IMPLEMENT:
+
+RESIZE:
+
+RESERVE:
+{
+	check the size we are reserving is not bigger than max_size()
+		if so, then we throw an error
+	if (n > capacity)
+	{
+		save the start, the end, the size and capacity on variables
+		then allocate start, capacity as in the fill constructor
+		remeber end and capacity are not the same, because the end will
+		be the same as before but the capcacity (give by the allocate)
+		will be different
+	}
+}
+AT:
+
+ASSIGN:
+
+PUSH_BACK:
+	if (_end == _end_capacity) //means i need to make the container bigger
+		//make it bigger
+	alloc.construct(_end, val);
+	_end++;
+
+POP_BACK:
+
+INSERT:
+
+ERASE(iterator position):
+
+ERASE(iterator first, iterator last):
+
+
+SWAP (vector& x):
+	check if they are the same
+		return;
+	remember the function swap(int *, int *)
+	do the same but for 
+		alloc;
+		end;
+		start;
+		_end_capacity
+	you will need a temp alloc
+	you will need a temp pointer
+
+CLEAR:
+	I need to remove all the elements from the vector
+	to do this i will use the function alloc.destroy(pointer p)
+		pointer p is the pointer to the object that will be destroyed
+
+	loop backwards (meaning _end--)

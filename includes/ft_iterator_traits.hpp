@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 22:12:38 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/01 21:14:27 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/09 01:59:09 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ namespace ft {
 
 	struct biderectional_iterator_tag{};
 	struct random_access_iterator_tag{};
-	struct input_iterator_tag{};
-	struct forward_iterator_tag{};
 	
 	
 	template<class Iterator>

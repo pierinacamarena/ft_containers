@@ -6,16 +6,16 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/03 14:54:09 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/10 04:57:55 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
-#include "../iterator/ft_iterator_traits.hpp"
-#include "../iterator/ft_random_access_iterator.hpp"
-#include "../iterator/ft_reverse_iterator.hpp"
-#include "../utils/nullptr.hpp"
+#include "ft_iterator_traits.hpp"
+#include "ft_random_access_iterator.hpp"
+#include "ft_reverse_iterator.hpp"
+#include "nullptr.hpp"
 #include "ft_utils_vector.hpp"
 
 #include <iostream>
@@ -59,7 +59,8 @@ namespace ft {
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		/*
-		*Other
+		*Other									pointer;
+
 		*/
 		typedef ptrdiff_t difference_type;
 		typedef size_t size_type;
@@ -138,7 +139,10 @@ namespace ft {
 			}
 
 		/*Constructs a container with a copy of each of the elements in x, in the same order*/
-		vector (const vector& x)
+		vector (const vector& x) :
+			_start(nullptr_t),
+			_end(nullptr_t),
+			_end_capacity(nullptr_t)
 		{
 			if (this == &x )
 				return;

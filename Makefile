@@ -6,7 +6,7 @@
 #    By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/26 17:15:13 by pcamaren          #+#    #+#              #
-#    Updated: 2022/12/28 15:24:43 by pcamaren         ###   ########.fr        #
+#    Updated: 2023/01/10 04:15:06 by pcamaren         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,10 @@ NAME			= ft_container_tester
 
 # SRCS 
 SOURCES_FOLDER	= ./tests/
-SOURCES			=	main.cpp							
+SOURCES			=	main_vector.cpp					
 # ******************************************************************************
 # INCLUDES
- INCLUDE 		= ./includes/vector/*.hpp
+ INCLUDE 		= ./includes/*.hpp
 # ******************************************************************************
 # FLAGS 
 FLAGS 			= --std=c++98
