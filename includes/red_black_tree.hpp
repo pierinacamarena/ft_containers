@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 01:27:28 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 03:41:47 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/10 23:29:10 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ namespace ft
 		}
 
 		 Node *sibling() {
-			// sibling null if no parent
 			if (parent == NULL)
 			return NULL;
 		
@@ -70,10 +69,6 @@ namespace ft
 
 		bool isOnLeft() { return this == parent->left; }
 	};
-
-	//to implement upper and lower bound
-	//iterators
-	//swap
 
 	template< typename T, typename N>
 	class tree_iterator
@@ -160,7 +155,6 @@ namespace ft
 
 		iterator operator++(int)
 		{
-			// std::cout << "inside operator here" << '\n';
 			iterator tmp = *this;
 			_ptr = increment(_ptr);
 			return (tmp);
@@ -201,22 +195,6 @@ namespace ft
 		{
 			return (_ptr);
 		}
-
-		// node_pointer	next(node_pointer node)
-		// {
-		// 	if (node->right != _nil)
-		// 	{
-		// 		return (min(node->right));}
-		// 	node_pointer y = node->parent;
-		// 	while (y != NULL && node == y->right)
-		// 	{
-		// 		node = y;
-		// 		y = y->parent;
-		// 	}
-		// 	if (y == NULL)
-		// 		return (_nil);
-		// 	return (y);
-		// }
 
 		node_pointer	min(node_pointer node)
 		{
@@ -312,7 +290,6 @@ namespace ft
 
 		~Red_Black_Tree()
 		{
-			//regular_clear();
 			clear_rec(_root);
 			_root = _TNULL;
 			_node_alloc.destroy(_TNULL);
@@ -642,37 +619,43 @@ namespace ft
 		
 		void		leftRotate(node_pointer  x)
 		{
-			node_pointer y = x->right;
-			x->right = y->left;
-			if (y->left != _TNULL)
-				y->left->parent = x;
-			y->parent = x->parent;
-			if (!x->parent)
-				this->_root = y;
-			else if (x == x->parent->left)
-				x->parent->left = y; 
-			else
-				x->parent->right = y;
-			y->left = x; 
-			x->parent = y;
+			if (x != _TNULL)
+			{			
+				node_pointer y = x->right;
+				x->right = y->left;
+				if (y->left != _TNULL)
+					y->left->parent = x;
+				y->parent = x->parent;
+				if (!x->parent)
+					this->_root = y;
+				else if (x == x->parent->left)
+					x->parent->left = y; 
+				else
+					x->parent->right = y;
+				y->left = x; 
+				x->parent = y;
+			}
 		}
-
+		
 		void		rightRotate(node_pointer x)
 		{
-			node_pointer y = x->left;
+			if (x != _TNULL)
+			{
+				node_pointer y = x->left;
 
-			x->left = y->right;
-			if (y->right != _TNULL)
-				y->right->parent = x;
-			y->parent = x->parent;
-			if (!x->parent)
-				_root = y;
-			else if (x == x->parent->left)
-				x->parent->left = y;
-			else
-				x->parent->right = y;
-			y->right = x;
-			x->parent = y;
+				x->left = y->right;
+				if (y->right != _TNULL)
+					y->right->parent = x;
+				y->parent = x->parent;
+				if (!x->parent)
+					_root = y;
+				else if (x == x->parent->left)
+					x->parent->left = y;
+				else
+					x->parent->right = y;
+				y->right = x;
+				x->parent = y;
+			}
 		}
 
 
@@ -747,12 +730,6 @@ namespace ft
 				return (search(node->left, key));
 			else
 				return (search(node->right, key));
-			// if (key == node->data)
-			// 	return (node);
-			// if (key < node->data)
-			// 	return (search(node->left, key));
-			// else
-			// 	return (search(node->right, key));
 		}
 
 
@@ -764,67 +741,6 @@ namespace ft
 			return (tmp);
 		}
 
-		// void	deleteNode(node_pointer v)
-		// {
-		// 	node_pointer u = bst_replace(v);
-		// 	bool uvBlack = ((u == _TNULL || u->color == BLACK) && (v->color == BLACK));
-		// 	node_pointer parent = v->parent;
-
-		// 	if (u == NULL)
-		// 	{
-		// 		//therefore a leaf
-		// 		if (v == _root)
-		// 			_root = _TNULL;
-		// 		else
-		// 		{
-		// 			if (uvBlack)
-		// 				fixDoubleBlack(v);
-		// 			else{
-		// 				if (v->sibling() != _TNULL)
-		// 					v->sibling()->color = RED;
-		// 			}
-		// 			if (v->isOnLeft())
-		// 				parent->left = _TNULL;
-		// 			else
-		// 				parent->right = _TNULL;
-		// 		}
-		// 		_node_alloc.destroy(v);
-		// 		_node_alloc.deallocate(v, 1);
-		// 		_size--;
-		// 		return;
-		// 	}
-		// 	if (v->left == _TNULL || v->right == _TNULL)
-		// 	{
-		// 		//v has one child
-		// 		if (v == _root)
-		// 		{
-		// 			v->data = u->data;
-		// 			v->left = v->right = _TNULL;
-		// 			_node_alloc.destroy(u);
-		// 			_node_alloc.deallocate(u, 1);
-		// 			_size--;
-		// 		}
-		// 		else
-		// 		{
-		// 			if (v->isOnLeft())
-		// 				parent->left = u;
-		// 			else
-		// 				parent->right = u;
-		// 			_node_alloc.destroy(v);
-		// 			_node_alloc.deallocate(v, 1);
-		// 			_size--;
-		// 			u->parent = parent;
-		// 			if (uvBlack)
-		// 				fixDoubleBlack(u);
-		// 			else
-		// 				u->color = BLACK;
-		// 		}
-		// 		return;
-		// 	}
-		// 	swapValues(u,v);
-		// 	deleteNode(u);
-		// 	return;
-		// }
 
 		void			rb_transplant(node_pointer u, node_pointer v) //inyectar b en lado de a
 		{	
@@ -855,10 +771,10 @@ namespace ft
 			node_pointer    p = node->parent;
 			if (!p)
 				return NULL;
-			if (node == p->left) //if the node is the left child of its parent
-				return p->right; //then sibling is the right child
-			else				//if the node is the right child	
-				return p->left;	//then the node is the left child
+			if (node == p->left)
+				return p->right;
+			else	
+				return p->left;
 		}
 		
 		static bool    is_left(node_pointer node)
