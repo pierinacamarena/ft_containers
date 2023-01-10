@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 15:08:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 05:23:31 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/10 05:44:03 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 namespace ft {
 	
-	template <class T, class Container = std::vector<T> >
+	template <class T, class Container = ft::vector<T> >
 	class stack
 	{
 		public:
@@ -61,9 +61,7 @@ namespace ft {
 		object as data. This container object is a copy of 
 		the ctnr argument passed to the constructor, if any,
 		otherwise it is an empty container.*/
-		explicit stack (const Container & ctnr = Container()) :
-			_container(ctnr)
-		{}
+		explicit stack (const Container & ctnr = Container()) :_container(ctnr) {}
 
 		// virtual ~stack(void) {};
 		/*
