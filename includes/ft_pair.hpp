@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 22:16:28 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/09 23:23:38 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/10 05:54:57 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 namespace ft
 {
-	template <class Input, class Output> //recibe algo -> devuelve ejemplo std::unary_function<int,bool>  recibe int y devuelve un bool
+	template <class Input, class Output>
 	struct selectFirst : public std::unary_function<Input, Output>
 	{
 		const Output &operator()(const Input &x) const
