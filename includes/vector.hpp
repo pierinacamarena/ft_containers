@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 04:57:55 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/10 05:47:44 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ namespace ft {
 			_end(nullptr_t),
 			_end_capacity(nullptr_t)
 		{
-			if (this == &x )
+			if (this == &x || x._start == nullptr_t)
 				return;
 			const size_type otherLen = x.size();
 			if (size() > 0)
