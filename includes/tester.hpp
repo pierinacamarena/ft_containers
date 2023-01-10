@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 06:22:31 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 02:54:12 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/10 05:39:59 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "vector.hpp"
 #include "map.hpp"
-// #include "stack.hpp"
+#include "stack.hpp"
 
 # include <vector>
 # include <map>
