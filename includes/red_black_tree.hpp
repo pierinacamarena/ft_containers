@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 01:27:28 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/11 10:51:03 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 11:07:45 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,6 @@ namespace ft
 		size_type				_size;
 
 		public:
-		// Red_Black_Tree() {};
 		Red_Black_Tree(const value_compare &comp = value_compare(), const allocator_type alloc = allocator_type()): _node_alloc(alloc), _comp(comp), _size(0) {
 			_TNULL = _node_alloc.allocate(1);
 			_root = _TNULL;
@@ -398,18 +397,6 @@ namespace ft
 			}
   		}
 
-		// bool	deleteNode(const key_type &key)
-		// {
-		// 	if (_root == _TNULL)
-		// 		return (false);
-		// 	node_pointer v;
-		// 	v = search(key);
-		// 	if (v == _TNULL)
-		// 		return (false);
-		// 	deleteNode(v);
-		// 	return (true);
-		// }
-
 		node_pointer		search(const key_type &key) const
 		{
 			return  search(_root, key);
@@ -478,7 +465,6 @@ namespace ft
 		
 		bool			deleteNode(const key_type &key)
 		{
-			// std::cout << "here" << '\n';
 			node_pointer node_to_delete, x, y;
 			Color		saved_color;
 			bool		leaf;
@@ -520,7 +506,6 @@ namespace ft
 			_node_alloc.destroy(node_to_delete);
 			_node_alloc.deallocate(node_to_delete, 1);
 			_size--;
-			// std::cout << "size is " << _size << '\n';
 			if(!leaf && saved_color == BLACK)
 				deleteFix(x);
 			return true;
@@ -698,7 +683,6 @@ namespace ft
 							y->color = BLACK;
 							x->parent->parent->color = RED;
 							x = x->parent->parent;
-							// printTree();
 						}
 						else
 						{
@@ -746,7 +730,7 @@ namespace ft
 		}
 
 
-		void			rb_transplant(node_pointer u, node_pointer v) //inyectar b en lado de a
+		void			rb_transplant(node_pointer u, node_pointer v)
 		{	
 			if (u->parent == _TNULL)
 				_root = v;
@@ -799,7 +783,6 @@ namespace ft
 		}
 		
 		void printHelper(node_pointer print_root, std::string indent, bool last) {
-			// std::cout << "here" << '\n';
 			if (print_root != _TNULL) 
 			{
 				std::cout << indent;
@@ -822,7 +805,6 @@ namespace ft
 		{
 			if (x == _root)
 				return;
-			// Reached root
 		
 			node_pointer sibling = x->sibling(), parent = x->parent;
 			if (sibling == _TNULL)
@@ -903,12 +885,6 @@ namespace ft
 				}
 			}
 		}
-
-		// void regular_clear()
-		// {
-		// 	while(_root != _TNULL)
-		// 		deleteNode(KeyOfValue()(_root->data));
-		// }
 
 		void clear_rec(node_pointer const &node)
 		{
