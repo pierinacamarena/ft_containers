@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 09:32:51 by pierina           #+#    #+#             */
-/*   Updated: 2023/01/01 18:33:37 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 11:48:20 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,67 +120,6 @@ namespace ft {
 	template <typename T>
 	struct is_integral : is_integral_base<typename remove_cv<T>::type> {
 	};
-
-
-	// template <typename T>
-	// struct is_integral
-	// {
-	// 	static const bool value = false;
-	// };
-
-	// template <>
-	// struct is_integral<bool>
-	// {
-	// 	static const bool value = true;
-	// };
-
-	// template <>
-	// struct is_integral<char>
-	// {
-	// 	static const bool value = true;
-	// };
-
-	// template <>
-	// struct is_integral<wchar_t>
-	// {
-	// 	static const bool value = true;
-	// };
-	
-	// template <>
-	// struct is_integral<signed char>
-	// {
-	// 	static const bool value = true;
-	// };
-	
-	// template <>
-	// struct is_integral<short int>
-	// {
-	// 	static const bool value = true;
-	// };
-	
-	// template <>
-	// struct is_integral<int>
-	// {
-	// 	static const bool value = true;
-	// };
-
-	// template <>
-	// struct is_integral<long int>
-	// {
-	// 	static const bool value = true;
-	// };
-
-	// template <>
-	// struct is_integral<long long int>
-	// {
-	// 	static const bool value = true;
-	// };
-
-	// template<typename T>
-	// struct is_integral_cv
-	// {
-	// 	static const bool value = is_integral<typename remove_cv<T>::type>::value;
-	// };
 }
 
 #endif

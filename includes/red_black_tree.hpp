@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 01:27:28 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/11 11:07:45 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 11:46:07 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ namespace ft
 			return (*this);
 		} 
 
+		//postfix
 		iterator operator++(int)
 		{
 			iterator tmp = *this;
@@ -162,6 +163,7 @@ namespace ft
 
 		//decrement
 
+		//prefix
 		iterator &operator--()
 		{
 			if(_ptr == _nil)
@@ -171,6 +173,7 @@ namespace ft
 			return (*this);
 		}
 
+		//postfix
 		iterator operator--(int)
 		{
 			iterator tmp = *this;

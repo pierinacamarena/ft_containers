@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 22:47:07 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/11 10:50:51 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 11:45:08 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ namespace ft
 class map
 {
 public:
-	// types:
+	/**
+	**************************************************
+	* Member types definition
+	**************************************************
+	**/
 	typedef Key																key_type;
 	typedef T																mapped_type;
 	typedef pair<const Key, T>												value_type;
@@ -77,7 +81,12 @@ public:
 
 	public:
 
-// construct
+	/**
+	**************************************************
+	* Constructor, destructor, copy operator
+	**************************************************
+	**/
+
 	explicit map (const key_compare& comp = key_compare(),
               const allocator_type& alloc = allocator_type())
 			  : _alloc(alloc), _comp(comp), _rbt() {}
@@ -113,7 +122,12 @@ public:
 		return (*this);
 	}
 
-// iterator
+	/**
+	**************************************************
+	* Iterators:
+	**************************************************
+	**/
+
 	iterator		begin()
 	{
 		return (iterator(_rbt.min(), _rbt.getRoot(), _rbt.getNill()));
@@ -154,7 +168,12 @@ public:
 		return (const_reverse_iterator(begin()));
 	}
 
-// capacity
+	/**
+	**************************************************
+	* Capacity functions
+	**************************************************
+	**/
+
 	bool		empty() const
 	{
 		return (_rbt.getSize() == 0);
@@ -169,11 +188,13 @@ public:
 		return (_rbt.max_size());
 	}
 
-// element access 
+	/**
+	**************************************************
+	* Accessors:
+	**************************************************
+	**/
 	mapped_type& operator[] (const key_type& k)
 	{
-
-		// return (*((insert(ft::make_pair(k, mapped_type()))).first)).second;
 		node_pointer found = _rbt.search(k);
 		if (found != _rbt.getNill())
 			return (found->data.second);
@@ -182,7 +203,12 @@ public:
 		return (found->data.second);
 	}
 
-// modifiers
+	/**
+	**************************************************
+	* Modifiers
+	**************************************************
+	**/
+
 	ft::pair<iterator,bool>	insert(const value_type& val)
 	{
 		bool b = _rbt.insert(val);
@@ -235,7 +261,12 @@ public:
 		_rbt.set_size();
 	}
 
-// observers
+	/**
+	**************************************************
+	* Observers
+	**************************************************
+	**/
+
 	/*
 	Returns a copy of the comparison object used by the container to compare keys.
 	*/
@@ -254,7 +285,11 @@ public:
 		return (value_compare(_comp));
 	}
 
-// operations
+	/**
+	**************************************************
+	* Operations
+	**************************************************
+	**/
 
 	/*
 	Searches the container for an element with a key equivalent to k 
@@ -373,13 +408,18 @@ public:
 
 }; /* class map */
 
-template <class Key, class T, class Compare, class Alloc>
+	/**
+	**************************************************
+	* Relational operators
+	**************************************************
+	**/
+
+	template <class Key, class T, class Compare, class Alloc>
 	bool	operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
 	{
 		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
-	// not equal <==> !(==)
 	template <class Key, class T, class Compare, class Alloc>
 	bool	operator!=(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
 	{
@@ -410,11 +450,11 @@ template <class Key, class T, class Compare, class Alloc>
 		return (!operator<(lhs, rhs));
 	}
 
-template <class Key, class T, class Compare, class Alloc>
-	void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
-{
-	x.swap(y);
-}
+	template <class Key, class T, class Compare, class Alloc>
+		void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
+	{
+		x.swap(y);
+	}
 
 } /*namespace ft*/
 
