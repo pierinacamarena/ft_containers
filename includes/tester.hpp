@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 06:22:31 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 05:39:59 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 06:17:12 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,9 @@
 #ifndef LIB
 #define LIB ft
 #endif
+
+void vector_test();
+void stack_test();
+void map_test();
 
 #endif

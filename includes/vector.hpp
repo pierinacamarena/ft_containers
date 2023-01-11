@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:52:23 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 05:47:44 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 09:40:18 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,8 @@ namespace ft {
 				  _end(nullptr_t),
 				  _end_capacity(nullptr_t)
 			{
-				
-				difference_type len = std::distance(first, last);
-				_start = _alloc.allocate(len);		
-				_end = _copy(first, last, _start);
-				_end_capacity = _end;				
+				typedef typename iterator_traits<InputIterator>::iterator_category category;
+        		_iter_construct(first, last, category());			
 			}
 
 		/*Constructs a container with a copy of each of the elements in x, in the same order*/
@@ -492,46 +489,48 @@ namespace ft {
 
 		// //range version
 
-		template <typename InputIt>
-    	void assign(InputIt first, typename enable_if<!is_integral<InputIt>::value, InputIt>::type last)
+		template <typename InputIterator>
+    	void assign(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
     	{
-			size_type len = ft::distance(first, last);
-			size_type orig_size = size();
-			size_type orig_capacity = capacity();
-			if (capacity() == 0)
-			{
-				_start = _alloc.allocate(len);
-				_copy(first, last, _start);
-				_end = _start + len;
-				_end_capacity = _end;
-			}
-			else if (capacity() > 0 && size() == 0)
-			{
-				_alloc.deallocate(_start, capacity());
-				_start = _alloc.allocate(len);
-				std::uninitialized_copy(first, last, _start);
-				_end = _start + len;
-				_end_capacity = _end;
-			}
-			else if (len > orig_capacity)
-			{
-				_destroy(_start, _end);
-				_alloc.deallocate(_start, capacity());
-				_start = _alloc.allocate(len);
-				std::uninitialized_copy(first, last, _start);
-				_end = _start + len;
-				_end_capacity = _end;
-			}
-			else if (orig_size >= len)
-			{
-				_erase_at_end(std::copy(first, last, _start));}
-			else
-			{
-				InputIt mid = first;
-				std::advance(mid, orig_size);
-				std::copy(first, mid, _start);
-				_end = _copy(mid, last, _end);
-			}	
+			typedef typename iterator_traits<InputIterator>::iterator_category category;
+        	_assign_range(first, last, category());
+			// size_type len = ft::distance(first, last);
+			// size_type orig_size = size();
+			// size_type orig_capacity = capacity();
+			// if (capacity() == 0)
+			// {
+			// 	_start = _alloc.allocate(len);
+			// 	_copy(first, last, _start);
+			// 	_end = _start + len;
+			// 	_end_capacity = _end;
+			// }
+			// else if (capacity() > 0 && size() == 0)
+			// {
+			// 	_alloc.deallocate(_start, capacity());
+			// 	_start = _alloc.allocate(len);
+			// 	std::uninitialized_copy(first, last, _start);
+			// 	_end = _start + len;
+			// 	_end_capacity = _end;
+			// }
+			// else if (len > orig_capacity)
+			// {
+			// 	_destroy(_start, _end);
+			// 	_alloc.deallocate(_start, capacity());
+			// 	_start = _alloc.allocate(len);
+			// 	std::uninitialized_copy(first, last, _start);
+			// 	_end = _start + len;
+			// 	_end_capacity = _end;
+			// }
+			// else if (orig_size >= len)
+			// {
+			// 	_erase_at_end(std::copy(first, last, _start));}
+			// else
+			// {
+			// 	InputIterator mid = first;
+			// 	std::advance(mid, orig_size);
+			// 	std::copy(first, mid, _start);
+			// 	_end = _copy(mid, last, _end);
+			// }	
    		}
 
 		//fill version
@@ -656,48 +655,50 @@ namespace ft {
 		template <class InputIterator>    
 		void insert (iterator position, InputIterator first, InputIterator last, typename enable_if< !is_integral<InputIterator>::value, int>::type = 0)
 		{
-				if (first == last)
-				return;
-				const size_type n = ft::distance(first, last);
-				if (size_type(_end_capacity - _end) >= n)
-				{
-					const size_type elemsAfterPos = end() - position;
-					pointer oldFinish(_end);
-					if (elemsAfterPos > n)
-					{
-						_copy(_end - n, _end, end().base());
-						_copy_backward(position.base(), oldFinish - n, oldFinish);
-						_destroy_and_copy(first, last, position);
-						_end += n;
-					}
-					else
-					{
-						InputIterator mid = first;
-						std::advance(mid, elemsAfterPos);
-						_copy(mid, last, _end);
-						_end += n - elemsAfterPos;
-						_copy(position.base(), oldFinish, _end);
-						_end += elemsAfterPos;
-						std::copy(first, mid, position);
-					}
-					
-				}
-				else
-				{
-					size_type new_capacity = capacity() + std::max(n, capacity());
-					pointer futur_start = _alloc.allocate(new_capacity);
-					pointer tmp;
-					tmp  = _copy(begin(), position, futur_start);
-					tmp = _copy(first, last, tmp);
-					tmp = _copy(position, end(), tmp);
-					if (size() > 0)
-						_destroy(_start, _end);
-					if (capacity() > 0)
-						_alloc.deallocate(_start, capacity());
-					_start = futur_start;
-					_end = tmp;
-					_end_capacity = _start + new_capacity;
-				}
+			typedef typename iterator_traits<InputIterator>::iterator_category category;
+        	_insert_range(position, first, last, category());	
+			// if (first == last)
+			// return;
+			// const size_type n = ft::distance(first, last);
+			// if (size_type(_end_capacity - _end) >= n)
+			// {
+			// 	const size_type elemsAfterPos = end() - position;
+			// 	pointer oldFinish(_end);
+			// 	if (elemsAfterPos > n)
+			// 	{
+			// 		_copy(_end - n, _end, end().base());
+			// 		_copy_backward(position.base(), oldFinish - n, oldFinish);
+			// 		_destroy_and_copy(first, last, position);
+			// 		_end += n;
+			// 	}
+			// 	else
+			// 	{
+			// 		InputIterator mid = first;
+			// 		std::advance(mid, elemsAfterPos);
+			// 		_copy(mid, last, _end);
+			// 		_end += n - elemsAfterPos;
+			// 		_copy(position.base(), oldFinish, _end);
+			// 		_end += elemsAfterPos;
+			// 		std::copy(first, mid, position);
+			// 	}
+				
+			// }
+			// else
+			// {
+			// 	size_type new_capacity = capacity() + std::max(n, capacity());
+			// 	pointer futur_start = _alloc.allocate(new_capacity);
+			// 	pointer tmp;
+			// 	tmp  = _copy(begin(), position, futur_start);
+			// 	tmp = _copy(first, last, tmp);
+			// 	tmp = _copy(position, end(), tmp);
+			// 	if (size() > 0)
+			// 		_destroy(_start, _end);
+			// 	if (capacity() > 0)
+			// 		_alloc.deallocate(_start, capacity());
+			// 	_start = futur_start;
+			// 	_end = tmp;
+			// 	_end_capacity = _start + new_capacity;
+			// }
 		}
 
 		/*ERASE: Removes from the vector either a single element (position) or a range of elements ([first,last)).
@@ -763,6 +764,139 @@ namespace ft {
 		 * private_functions
 		******************************************
 		*/
+		private:
+
+		template<typename InputIterator>
+		void _assign_range(InputIterator first, InputIterator last, std::input_iterator_tag)
+		{
+			if (size() > 0)
+				clear();
+			for(; first != last; ++first)
+			{
+				push_back(*first);
+			}
+		}
+
+		template<typename ForwardIterator>
+		void _assign_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+		{
+			size_type len = ft::distance(first, last);
+			size_type orig_size = size();
+			size_type orig_capacity = capacity();
+			if (capacity() == 0)
+			{
+				_start = _alloc.allocate(len);
+				_copy(first, last, _start);
+				_end = _start + len;
+				_end_capacity = _end;
+			}
+			else if (capacity() > 0 && size() == 0)
+			{
+				_alloc.deallocate(_start, capacity());
+				_start = _alloc.allocate(len);
+				std::uninitialized_copy(first, last, _start);
+				_end = _start + len;
+				_end_capacity = _end;
+			}
+			else if (len > orig_capacity)
+			{
+				_destroy(_start, _end);
+				_alloc.deallocate(_start, capacity());
+				_start = _alloc.allocate(len);
+				std::uninitialized_copy(first, last, _start);
+				_end = _start + len;
+				_end_capacity = _end;
+			}
+			else if (orig_size >= len)
+			{
+				_erase_at_end(std::copy(first, last, _start));}
+			else
+			{
+				ForwardIterator mid = first;
+				std::advance(mid, orig_size);
+				std::copy(first, mid, _start);
+				_end = _copy(mid, last, _end);
+			}	
+		}
+
+		template<typename InputIterator>
+		void _insert_range(iterator position, InputIterator first, InputIterator last, std::input_iterator_tag)
+		{
+			if (position == end())
+			{
+				for (; first != last; ++first)
+					push_back(*first);
+			}
+			else if (first != last)
+			{
+				vector temp(first, last);
+				insert(position, temp.begin(), temp.end());
+			}
+		}
+
+		template<typename ForwardIterator>
+		void _insert_range(iterator position, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+		{
+			if (first == last)
+				return;
+			const size_type n = ft::distance(first, last);
+			if (size_type(_end_capacity - _end) >= n)
+			{
+				const size_type elemsAfterPos = end() - position;
+				pointer oldFinish(_end);
+				if (elemsAfterPos > n)
+				{
+					_copy(_end - n, _end, end().base());
+					_copy_backward(position.base(), oldFinish - n, oldFinish);
+					_destroy_and_copy(first, last, position);
+					_end += n;
+				}
+				else
+				{
+					ForwardIterator mid = first;
+					std::advance(mid, elemsAfterPos);
+					_copy(mid, last, _end);
+					_end += n - elemsAfterPos;
+					_copy(position.base(), oldFinish, _end);
+					_end += elemsAfterPos;
+					std::copy(first, mid, position);
+				}
+				
+			}
+			else
+			{
+				size_type new_capacity = capacity() + std::max(n, capacity());
+				pointer futur_start = _alloc.allocate(new_capacity);
+				pointer tmp;
+				tmp  = _copy(begin(), position, futur_start);
+				tmp = _copy(first, last, tmp);
+				tmp = _copy(position, end(), tmp);
+				if (size() > 0)
+					_destroy(_start, _end);
+				if (capacity() > 0)
+					_alloc.deallocate(_start, capacity());
+				_start = futur_start;
+				_end = tmp;
+				_end_capacity = _start + new_capacity;
+			}
+		}
+
+		template <typename InputIterator>
+		void _iter_construct(InputIterator first, InputIterator last, std::input_iterator_tag)
+		{
+			for (; first != last; ++first) {
+				push_back(*first);
+			}
+		}
+
+		template <typename ForwardIterator>
+		void _iter_construct(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+		{
+			difference_type len = std::distance(first, last);
+			_start = _alloc.allocate(len);
+			_end = _copy(first, last, _start);
+			_end_capacity = _end;	
+		}
 
 		void check_size(size_type count)
 		{

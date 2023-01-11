@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 01:27:28 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 23:29:10 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 10:51:03 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -378,6 +378,11 @@ namespace ft
 			return h;
 		}
 
+		void			set_size()
+		{
+			_size = 0;
+		}
+
 		value_type		&get_data(node_pointer node = NULL) const
 		{
 			if(!node)
@@ -423,29 +428,19 @@ namespace ft
 			}
 			while (x !=_TNULL)
 			{
-				//find the location to insert the new node by comparing its value
-				y = x; //save the root
+				y = x;
 				if(_comp(KeyOfValue()(new_node->data), KeyOfValue()(x->data)))
 					x = x->left;
 				else if(_comp(KeyOfValue()(x->data), KeyOfValue()(new_node->data)))
 					x = x->right;
-				// if (new_node->data < x->data)
-				// {
-				// 	x = x->left;}
-				// else if (x->data < new_node->data)
-				// {
-				// 	x = x->right;
-				// }
 				else
 				{
-					//the key already exists, so we can't insert because we are coding only for map
-					//map does not allow for repeated keys
 					_node_alloc.destroy(new_node);
 					_node_alloc.deallocate(new_node, 1);
 					return false;
 				}
 			}
-			new_node->parent = y; //parent of leaf is parent of newNode
+			new_node->parent = y;
 			if (!y)
 			{
 					_root = new_node;}
@@ -483,6 +478,7 @@ namespace ft
 		
 		bool			deleteNode(const key_type &key)
 		{
+			// std::cout << "here" << '\n';
 			node_pointer node_to_delete, x, y;
 			Color		saved_color;
 			bool		leaf;
@@ -524,6 +520,7 @@ namespace ft
 			_node_alloc.destroy(node_to_delete);
 			_node_alloc.deallocate(node_to_delete, 1);
 			_size--;
+			// std::cout << "size is " << _size << '\n';
 			if(!leaf && saved_color == BLACK)
 				deleteFix(x);
 			return true;
@@ -546,7 +543,7 @@ namespace ft
 			while(node != _root && node->color == BLACK)
 			{
 				node_pointer    _sibling = sibling(node);
-				if(is_left(node))
+				if(is_left(node) && _sibling != _TNULL)
 				{
 					if (_sibling->color == RED)
 					{
@@ -580,36 +577,41 @@ namespace ft
 				}
 				else
 				{
-					if (_sibling->color == RED)
+					if (_sibling != _TNULL)
 					{
-						_sibling->color = BLACK;
-						node->parent->color = RED;
-						rightRotate(node->parent);
-						_sibling = node->parent->left;
-					}
-
-					if (_sibling->left->color == BLACK && _sibling->right->color == BLACK)
-					{
-						_sibling->color = RED;
-						node = node->parent;
-					}
-					else
-					{
-						if(_sibling->left->color == BLACK)
+						if (_sibling->color == RED)
 						{
-							_sibling->right->color = BLACK;
-							_sibling->color = RED;
-							leftRotate(node);
+							_sibling->color = BLACK;
+							node->parent->color = RED;
+							rightRotate(node->parent);
 							_sibling = node->parent->left;
 						}
-						_sibling->color = node->parent->color;
-						node->parent->color = BLACK;
-						_sibling->left->color = BLACK;
-						rightRotate(node->parent);
-						node = _root;
-						break;
+
+						if (_sibling->left->color == BLACK && _sibling->right->color == BLACK)
+						{
+							_sibling->color = RED;
+							node = node->parent;
+						}
+						else
+						{
+							if(_sibling->left->color == BLACK)
+							{
+								_sibling->right->color = BLACK;
+								_sibling->color = RED;
+								leftRotate(node);
+								_sibling = node->parent->left;
+							}
+							_sibling->color = node->parent->color;
+							node->parent->color = BLACK;
+							_sibling->left->color = BLACK;
+							rightRotate(node->parent);
+							node = _root;
+							break;
+						}
 					}
 				}
+				if (_sibling == _TNULL)
+					break;
 			}
 			node->color = BLACK;
 		}
@@ -644,8 +646,10 @@ namespace ft
 				node_pointer y = x->left;
 
 				x->left = y->right;
-				if (y->right != _TNULL)
+				if (y != _TNULL && y->right != _TNULL && x!= _TNULL)
+				{
 					y->right->parent = x;
+				}
 				y->parent = x->parent;
 				if (!x->parent)
 					_root = y;
@@ -900,11 +904,11 @@ namespace ft
 			}
 		}
 
-		void regular_clear()
-		{
-			while(_root != _TNULL)
-				deleteNode(_root);
-		}
+		// void regular_clear()
+		// {
+		// 	while(_root != _TNULL)
+		// 		deleteNode(KeyOfValue()(_root->data));
+		// }
 
 		void clear_rec(node_pointer const &node)
 		{

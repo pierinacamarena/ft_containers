@@ -6,7 +6,7 @@
 /*   By: pcamaren <pcamaren@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 22:47:07 by pcamaren          #+#    #+#             */
-/*   Updated: 2023/01/10 03:42:59 by pcamaren         ###   ########.fr       */
+/*   Updated: 2023/01/11 10:50:51 by pcamaren         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include "nullptr.hpp"
-#include "ft_pair.hpp"
+#include "pair.hpp"
 #include "ft_iterator_traits.hpp"
 #include "red_black_tree.hpp"
 #include "ft_reverse_iterator.hpp"
@@ -215,8 +215,12 @@ public:
 	}
     void		erase(iterator first, iterator last)
 	{
+		iterator tmp1 = first;
+		iterator tmp2 = last;
 		while (first != last)
 			erase(first++);
+		if (first == begin() && last == end())
+			_rbt.set_size();
 	}
 	
 	void 		swap(map& other)
@@ -226,7 +230,9 @@ public:
 	
 	void 		clear()
 	{
+
 		erase(begin(), end());
+		_rbt.set_size();
 	}
 
 // observers

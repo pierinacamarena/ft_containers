@@ -1,3 +1,0 @@
-Vector:
-
-	insert when inserting into a 
